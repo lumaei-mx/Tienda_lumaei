@@ -16,6 +16,8 @@ export const settings: StoreSettings = {
   minMarginPct: 12,
   /** Comisión influencer (TikTok One / afiliados) reservada DENTRO del precio. */
   influencerCommissionPct: 15,
-  /** Tipo de cambio USD→MXN usado para cobrar en pesos en México (OXXO/SPEI). */
-  usdToMxn: 17.5,
+  /** Tipo de cambio USD→MXN usado para cobrar en pesos en México (OXXO/SPEI).
+   *  Actualizado 2026-08-17: Banxico 17-ago FIX 17.3288 / pagos 17.3562.
+   *  Estaba en 17.5 (hardcodeado) -> sobre-convertía ~2.6% más MXN. */
+  usdToMxn: 17.36,
 };

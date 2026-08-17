@@ -1,6 +1,7 @@
 import type { Market, Product, PublicProduct, StoreSettings } from "./types";
 import type { Lang } from "./i18n";
 import { t } from "./i18n";
+import { settings } from "./settings";
 
 export function formatMoney(amount: number) {
   return new Intl.NumberFormat("en-US", {
@@ -24,8 +25,8 @@ export function productPrice(product: Pick<PublicProduct, "priceUsd">) {
   return product.priceUsd;
 }
 
-/** Convierte USD a MXN con el tipo de cambio configurado. */
-export function toMxn(usd: number, rate = 17.5): number {
+/** Convierte USD a MXN con el tipo de cambio configurado (settings.usdToMxn). */
+export function toMxn(usd: number, rate = settings.usdToMxn ?? 17.5): number {
   return Number((usd * rate).toFixed(2));
 }
 
