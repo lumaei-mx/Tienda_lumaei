@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+import type { ReactNode } from "react";
 import type { PublicProduct } from "@/lib/types";
 import { useCart } from "@/lib/cart-store";
 import { t } from "@/lib/i18n";
@@ -14,8 +16,22 @@ import { BackButton } from "@/components/BackButton";
 import { SectionTitle } from "@/components/SectionTitle";
 import { ChevronDown, Check } from "lucide-react";
 
-export function ProductPageView({ product }: { product: PublicProduct }) {
+export function ProductPageView({
+  product,
+  affiliateRef,
+}: {
+  product: PublicProduct;
+  /** Ref de afiliado (normalizado) capturado del query param ?ref= de la PDP. */
+  affiliateRef?: string;
+}) {
   const lang = useCart((s) => s.lang);
+  const setRef = useCart((s) => s.setRef);
+  // C1: el ref queda capturado en el estado del carrito al ABRIR la PDP con
+  // ?ref=. No espera al click de "agregar" — así persiste aunque el cliente
+  // agregue desde otra página después de visitar el link del influencer.
+  useEffect(() => {
+    if (affiliateRef) setRef(affiliateRef);
+  }, [affiliateRef, setRef]);
   const curated = getProductCopy(product);
   const base =
     curated && (lang === "es" || curated.hookEn)
@@ -23,6 +39,33 @@ export function ProductPageView({ product }: { product: PublicProduct }) {
       : buildFallbackCopy(product, lang);
   const copy = pickCopy(base, lang);
   const group = groupLabel(groupCategory(product.category), lang);
+
+  // Provenance → sección "Documentación y procedencia" (white-label documentado).
+  const prov = product.provenance;
+  const provRows: Array<[string, ReactNode]> = [];
+  if (prov) {
+    const esL = lang === "es";
+    const push = (labelEs: string, labelEn: string, value?: ReactNode) => {
+      if (value === undefined || value === "" || value === false) return;
+      provRows.push([esL ? labelEs : labelEn, value]);
+    };
+    push("Marca", "Brand", prov.brand);
+    push("Fabricante", "Manufacturer", prov.manufacturer);
+    push("Modelo", "Model", prov.model);
+    push("País de origen", "Country of origin", prov.countryOfOrigin);
+    push("Proveedor", "Supplier", prov.supplier);
+    push("Certificación FCC", "FCC certification", prov.certFcc);
+    push("Certificación CE", "CE certification", prov.certCe ? (esL ? "Sí" : "Yes") : undefined);
+    push("Etiquetado NOM-024", "NOM-024 labeling", prov.nom024 ? (esL ? "Sí" : "Yes") : undefined);
+    push("Certificación UL", "UL certification", prov.certUl ? (esL ? "Sí" : "Yes") : undefined);
+    push("RoHS", "RoHS", prov.rohs ? (esL ? "Sí" : "Yes") : undefined);
+    push("Garantía", "Warranty", prov.garantiaMeses ? `${prov.garantiaMeses} ${esL ? "meses" : "months"}` : undefined);
+    if (prov.manualUrl)
+      provRows.push([esL ? "Manual" : "Manual", <a key="m" href={prov.manualUrl} target="_blank" rel="noopener noreferrer" className="text-gold-dark underline">{esL ? "Ver manual" : "View manual"}</a>]);
+    if (prov.fichaTecnicaUrl)
+      provRows.push([esL ? "Ficha técnica" : "Datasheet", <a key="f" href={prov.fichaTecnicaUrl} target="_blank" rel="noopener noreferrer" className="text-gold-dark underline">{esL ? "Ver ficha" : "View datasheet"}</a>]);
+    if (prov.notes) provRows.push([esL ? "Notas" : "Notes", prov.notes]);
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -58,6 +101,7 @@ export function ProductPageView({ product }: { product: PublicProduct }) {
           <div className="mt-7">
             <AddToCartButton
               productId={product.id}
+              affiliateRef={affiliateRef}
               product={{
                 id: product.id,
                 name: product.name,
@@ -116,6 +160,24 @@ export function ProductPageView({ product }: { product: PublicProduct }) {
           ))}
         </div>
       </section>
+
+      {/* Documentación y procedencia */}
+      {provRows.length > 0 && (
+        <section className="mt-14">
+          <SectionTitle k="productDocs" className="font-serif text-2xl font-semibold text-brown" />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            {provRows.map(([label, value], i) => (
+              <div
+                key={i}
+                className="flex items-start justify-between gap-4 rounded-2xl border border-gold/20 bg-ivory px-5 py-3 text-sm"
+              >
+                <span className="text-brown-soft">{label}</span>
+                <span className="text-right font-medium text-brown">{value}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Reviews */}
       <ProductReviews product={product} />

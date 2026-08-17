@@ -15,8 +15,8 @@ const dict = {
   // Precios / moneda
   priceUsdSuffix: { es: "dlls", en: "USD" },
   priceNote: {
-    es: "Precio en dólares · tu banco convierte a pesos al pagar · envío e impuestos al checkout",
-    en: "Price in USD · your bank converts to your currency at checkout · shipping & taxes at checkout",
+    es: "Precio final · envío e impuestos al checkout",
+    en: "Final price · shipping & taxes at checkout",
   },
 
   // Barra envío gratis
@@ -248,6 +248,7 @@ const dict = {
   },
   productDescription: { es: "Descripción", en: "Description" },
   productSpecs: { es: "Especificaciones", en: "Specifications" },
+  productDocs: { es: "Documentación y procedencia", en: "Documentation & provenance" },
   productFaq: { es: "Preguntas frecuentes", en: "FAQ" },
   productCategoryDefault: { es: "Hogar", en: "Home" },
 
@@ -360,6 +361,11 @@ const dict = {
     es: "Incluye tu número de pedido y una foto del producto. Te decimos los siguientes pasos en menos de 24 horas.",
     en: "Include your order number and a photo of the product. We'll tell you the next steps within 24 hours.",
   },
+  retLegalT: { es: "Garantía legal de 90 días", en: "90-day legal guarantee" },
+  retLegal: {
+    es: "Los dispositivos electrónicos y de belleza tienen 90 días de garantía contra defectos de fábrica (Ley Federal de Protección al Consumidor). Si tu producto falla por defecto de fabricación, lo reponemos o te reembolsamos sin costo. La garantía no cubre daño por mal uso, golpes o exposición a líquidos no especificados.",
+    en: "Electronics and beauty devices carry a 90-day guarantee against manufacturing defects (Federal Consumer Protection Law). If your product fails due to a manufacturing defect, we replace it or refund you at no cost. The guarantee does not cover damage from misuse, drops or exposure to unspecified liquids.",
+  },
 
   // Contacto
   contTitle: { es: "Contacto", en: "Contact" },
@@ -464,6 +470,10 @@ const dict = {
   orderStatus: { es: "Estado", en: "Status" },
   orderStatusPendingPayment: { es: "Pago pendiente", en: "Payment pending" },
   orderStatusPaid: { es: "Pagado", en: "Paid" },
+  orderStatusAwaitingApproval: {
+    es: "Esperando autorización de envío",
+    en: "Awaiting shipping authorization",
+  },
   orderStatusQueued: { es: "En preparación", en: "Being prepared" },
   orderStatusSent: { es: "Enviado al almacén", en: "Sent to warehouse" },
   orderStatusShipped: { es: "Enviado", en: "Shipped" },
@@ -493,6 +503,31 @@ const dict = {
     en: "The page you're looking for doesn't exist or was moved.",
   },
   notFoundCta: { es: "Volver a la tienda", en: "Back to the store" },
+
+  // Email capture — popup exit-intent (lead magnet)
+  leadHeadline: {
+    es: "5 gadgets que te ahorran 1h al día (en serio)",
+    en: "5 gadgets that save you 1h a day (seriously)",
+  },
+  leadSub: {
+    es: "La lista que ya uso en casa. Gratis, sin spam.",
+    en: "The list I already use at home. Free, no spam.",
+  },
+  leadCta: { es: "Enviármelo gratis", en: "Send it to me free" },
+  leadEmailPlaceholder: { es: "tu@email.com", en: "you@email.com" },
+  leadConfirm: { es: "Revisa tu correo 📩", en: "Check your inbox 📩" },
+  leadError: {
+    es: "Algo salió mal. Intenta de nuevo.",
+    en: "Something went wrong. Try again.",
+  },
+  leadRateLimit: {
+    es: "Ya recibimos tu solicitud. Revisa tu correo.",
+    en: "We already received your request. Check your inbox.",
+  },
+  leadPrivacy: {
+    es: "Sin spam. Cancelas cuando quieras.",
+    en: "No spam. Unsubscribe anytime.",
+  },
 } as const;
 
 export type DictKey = keyof typeof dict;

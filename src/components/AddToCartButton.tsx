@@ -16,11 +16,15 @@ interface AddToCartProduct {
 export function AddToCartButton({
   productId,
   product,
+  affiliateRef,
 }: {
   productId: string;
   product?: AddToCartProduct;
+  /** Ref de afiliado a fijar en el carrito al agregar (PDP con ?ref=). */
+  affiliateRef?: string;
 }) {
   const add = useCart((s) => s.add);
+  const setRef = useCart((s) => s.setRef);
   const lang = useCart((s) => s.lang);
   const [ok, setOk] = useState(false);
 
@@ -29,6 +33,7 @@ export function AddToCartButton({
       type="button"
       onClick={() => {
         add(productId);
+        if (affiliateRef) setRef(affiliateRef);
         if (product) {
           trackClickButton(product);
           trackAddToCart({ ...product, quantity: 1 });

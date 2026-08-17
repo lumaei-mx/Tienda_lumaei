@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/lib/cart-store";
 import { t } from "@/lib/i18n";
+import { STORE_IDENTITY } from "@/lib/identity";
 
 export default function TerminosPage() {
   const lang = useCart((s) => s.lang);
@@ -68,6 +69,17 @@ export default function TerminosPage() {
               }
               return acc;
             }, [])}
+        </p>
+
+        <p className="mt-2 text-sm text-brown-soft">
+          {lang === "es"
+            ? `Responsable de los datos: ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEs} · RFC ${STORE_IDENTITY.rfc} · ${STORE_IDENTITY.domicilePublic}.`
+            : `Data controller: ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEn} · RFC ${STORE_IDENTITY.rfc} · ${STORE_IDENTITY.domicilePublic}.`}
+        </p>
+        <p className="mt-2 text-sm">
+          <a href="/privacidad" className="text-gold-dark underline">
+            {lang === "es" ? "Aviso de Privacidad integral" : "Full Privacy Notice"}
+          </a>
         </p>
       </div>
 

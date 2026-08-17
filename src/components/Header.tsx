@@ -12,6 +12,8 @@ export function Header() {
   const count = useCart((s) => s.items.reduce((n, i) => n + i.qty, 0));
   const lang = useCart((s) => s.lang);
   const setLang = useCart((s) => s.setLang);
+  const market = useCart((s) => s.market);
+  const setMarket = useCart((s) => s.setMarket);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
@@ -78,6 +80,38 @@ export function Header() {
               }`}
             >
               EN
+            </button>
+          </div>
+
+          <div
+            className="flex items-center rounded-full border border-gold/40 bg-cream p-0.5 text-xs font-semibold tracking-wider"
+            title="País / Country"
+          >
+            <button
+              type="button"
+              onClick={() => setMarket("MX")}
+              aria-pressed={market === "MX"}
+              aria-label="México"
+              className={`rounded-full px-2 py-1 transition ${
+                market === "MX"
+                  ? "bg-brown text-ivory"
+                  : "text-brown-soft hover:text-brown"
+              }`}
+            >
+              🇲🇽
+            </button>
+            <button
+              type="button"
+              onClick={() => setMarket("US")}
+              aria-pressed={market === "US"}
+              aria-label="United States"
+              className={`rounded-full px-2 py-1 transition ${
+                market === "US"
+                  ? "bg-brown text-ivory"
+                  : "text-brown-soft hover:text-brown"
+              }`}
+            >
+              🇺🇸
             </button>
           </div>
 

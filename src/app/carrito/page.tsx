@@ -5,10 +5,12 @@ import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cart-store";
 import { useProducts } from "@/lib/use-products";
+import { useStoreSettings } from "@/lib/use-store-settings";
 import { BackButton } from "@/components/BackButton";
 import type { Product } from "@/lib/types";
-import { formatPrice, productPrice } from "@/lib/money";
+import { formatByMarket, productPrice } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { productName } from "@/lib/copy";
 
 export default function CarritoPage() {
   const items = useCart((s) => s.items);
@@ -16,6 +18,8 @@ export default function CarritoPage() {
   const setQty = useCart((s) => s.setQty);
   const remove = useCart((s) => s.remove);
   const { byId, loading } = useProducts();
+  const market = useCart((s) => s.market);
+  const { settings } = useStoreSettings();
 
   const lines = items
     .map((i) => {
@@ -72,7 +76,7 @@ export default function CarritoPage() {
               <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-cream-dark">
                 <Image
                   src={l.product.images[0]}
-                  alt={l.product.name}
+                  alt={productName(l.product, lang)}
                   fill
                   className="object-cover"
                   sizes="96px"
@@ -81,9 +85,9 @@ export default function CarritoPage() {
               <div className="flex flex-1 flex-col">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-serif text-lg font-semibold text-brown">{l.product.name}</p>
+                    <p className="font-serif text-lg font-semibold text-brown">{productName(l.product, lang)}</p>
                     <p className="text-sm text-gold-dark">
-                      {formatPrice(l.price, lang)}
+                      {formatByMarket(l.price, market, settings.usdToMxn)}
                     </p>
                   </div>
                   <button
@@ -122,7 +126,7 @@ export default function CarritoPage() {
         <dl className="mt-4 space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-brown-soft">{t("subtotal", lang)}</dt>
-            <dd>{formatPrice(subtotal, lang)}</dd>
+            <dd>{formatByMarket(subtotal, market, settings.usdToMxn)}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-brown-soft">{t("shipping", lang)}</dt>
@@ -134,7 +138,7 @@ export default function CarritoPage() {
           </div>
           <div className="flex justify-between border-t border-gold/20 pt-2 text-base font-bold">
             <dt>{t("total", lang)}</dt>
-            <dd>{formatPrice(subtotal, lang)}</dd>
+            <dd>{formatByMarket(subtotal, market, settings.usdToMxn)}</dd>
           </div>
         </dl>
         <p className="mt-3 text-xs text-brown-soft">{t("shippingNote", lang)}</p>

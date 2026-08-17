@@ -5,7 +5,9 @@ import { Footer } from "@/components/Footer";
 import { FreeShippingBar } from "@/components/FreeShippingBar";
 import { LangHydrate } from "@/components/LangHydrate";
 import { TikTokPixel } from "@/components/TikTokPixel";
+import { EmailCapturePopup } from "@/components/EmailCapturePopup";
 import { settings } from "@/lib/settings";
+import { STORE_IDENTITY } from "@/lib/identity";
 import { readStoreSettings } from "@/lib/settings-db";
 import { detectLangServer } from "@/lib/i18n";
 import "./globals.css";
@@ -65,6 +67,26 @@ export default async function RootLayout({
 }>) {
   const lang = await detectLangServer();
   const s = await readStoreSettings();
+  const orgLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Lumaei",
+    url: "https://www.lumaei.com",
+    logo: "https://www.lumaei.com/logo-lumaei-sm.png",
+    description:
+      lang === "es"
+        ? "Tienda online de piezas seleccionadas. Envíos a México y Estados Unidos."
+        : "Online shop of hand-picked pieces. Shipping to Mexico and the United States.",
+    founder: { "@type": "Person", name: STORE_IDENTITY.responsibleName },
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Tijuana",
+      addressRegion: "BC",
+      addressCountry: "MX",
+    },
+    areaServed: ["MX", "US"],
+    sameAs: ["https://www.tiktok.com/@lumaei.mx"],
+  };
   return (
     <html
       lang={lang === "es" ? "es-MX" : "en-US"}
@@ -74,6 +96,10 @@ export default async function RootLayout({
         <meta
           name="tiktok-developers-site-verification"
           content="9XsM8ZCc87GJXulDhdTcNL8JKUMFF6FN"
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col bg-cream text-brown">
@@ -86,6 +112,7 @@ export default async function RootLayout({
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
+        <EmailCapturePopup />
       </body>
     </html>
   );

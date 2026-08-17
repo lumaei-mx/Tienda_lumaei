@@ -15,8 +15,14 @@ export interface ProductCopy {
     verified: boolean;
     text: string;
   }>;
-  reviewCount: number;
-  reviewAvg: number;
+  /** LEGACY (no usar para la UI): puede estar inflado (ej: 31/47 seeded).
+   *  El conteo y el promedio SIEMPRE se derivan del array `reviews` con
+   *  `reviewsSummary()` — regla de oro: cero reseñas inventadas. */
+  reviewCount?: number;
+  reviewAvg?: number;
+  /** Título corto en español (grid, title tag, alt de imágenes, carrito).
+   *  Reemplaza el keyword-soup del nombre CJ. */
+  name?: string;
   // Traducciones EN (opcionales): si existen, la PDP en inglés las usa.
   hookEn?: string;
   subtitleEn?: string;
@@ -64,14 +70,48 @@ export function pickCopy(copy: ProductCopy, lang: Lang): ProductCopy {
             : copy.reviews[i]?.text ?? r.text ?? "",
       }));
     })(),
-    reviewCount: copy.reviewCount,
-    reviewAvg: copy.reviewAvg,
   };
+}
+
+/**
+ * Deriva conteo y promedio del ARRAY REAL de reseñas — única fuente de verdad.
+ * Regla de oro: cero reseñas inventadas. Si el array está vacío devuelve 0/0
+ * (la UI muestra el estado honesto "Nuevo"). NO confíes en los campos legacy
+ * `reviewCount`/`reviewAvg` de ProductCopy: pueden estar inflados (31/47 seeded).
+ */
+export function reviewsSummary(copy: Pick<ProductCopy, "reviews">): {
+  reviewCount: number;
+  reviewAvg: number;
+} {
+  const reviews = copy.reviews;
+  if (!reviews.length) return { reviewCount: 0, reviewAvg: 0 };
+  const avg = reviews.reduce((sum, r) => sum + r.stars, 0) / reviews.length;
+  return { reviewCount: reviews.length, reviewAvg: Math.round(avg * 10) / 10 };
 }
 
 /** Nombre visible del producto según idioma (overrides EN para productos curados en ES). */
 const NAME_EN: Record<string, string> = {
   "cj-1602564551227224064": "Automatic Gravity Pet Feeder with Stainless Steel Bowl",
+};
+
+/**
+ * Títulos cortos en español para productos SIN copy curado (por slug).
+ * Source of truth: mapping del catálogo (21 productos) — aquí los que no
+ * tienen bloque en COPY_BY_ID. Los curados llevan `name` en su bloque.
+ */
+const FALLBACK_NAME_ES: Record<string, string> = {
+  "cable-organizer-bag-gadget-organizer-cable-case-portable-travel-electronic-acces":
+    "Organizador de Cables para Viaje",
+  "pasteable-pencil-tray-under-desk-drawer-organizer-table-storage-boxes-office-org":
+    "Organizador Bajo Escritorio",
+  "cat-steam-brush-steamy-dog-brush-3-in-1-electric-spray-cat-hair-brushes-for-mass":
+    "Cepillo de Vapor 3 en 1 para Mascotas",
+  "book-shelves-desk-organizer-office-mesh-home-metal-1pcs":
+    "Estante Organizador de Escritorio",
+  "4-in-1-retractable-usb-cable-creative-macaron-type-c-micro-cable-for-i-phone-wit":
+    "Cable USB Retráctil 4 en 1",
+  "laptop-bag": "Funda para Laptop",
+  "pet-noise-reduction-spray-soothing-pet-calm-mood": "Spray de Calma para Mascotas",
 };
 
 /** Descripción EN para productos curados en ES (el resto usa la de CJ que ya viene EN). */
@@ -81,8 +121,10 @@ const DESCRIPTION_EN: Record<string, string> = {
 };
 
 export function productName(p: PublicProduct, lang: Lang): string {
+  // EN: override curado si existe (el feeder). Para el resto, usa el mismo
+  // cascade ES (mejor que mostrar keyword-soup CJ a un cliente EN).
   if (lang === "en" && NAME_EN[p.id]) return NAME_EN[p.id];
-  return p.name;
+  return COPY_BY_ID[p.id]?.name ?? FALLBACK_NAME_ES[p.slug] ?? p.name;
 }
 
 export function productDescription(p: PublicProduct, lang: Lang): string {
@@ -90,8 +132,99 @@ export function productDescription(p: PublicProduct, lang: Lang): string {
   return p.description;
 }
 
-const REVIEW_COUNT = 47;
-const REVIEW_AVG = 4.7;
+/** Subtítulos genéricos (limpios, sin CJ) — source of truth para metas y fallback. */
+export const FALLBACK_SUBTITLE_ES =
+  "Seleccionado y enviado directamente desde el almacén a tu puerta. Envíos a México y Estados Unidos con rastreo.";
+export const FALLBACK_SUBTITLE_EN =
+  "Hand-picked and shipped directly from the warehouse to your door. Tracked shipping to Mexico and the United States.";
+
+/** Longitud máxima de meta description (Google muestra ~155-160). */
+const META_MAX_LEN = 160;
+/** Longitud mínima útil: si el copy curado rinde menos, se cae al hook/subtitle/fallback. */
+const META_MIN_LEN = 40;
+/** Fragmentos del raw CJ que jamás deben aparecer en una meta description. */
+const META_FORBIDDEN = [/Overview/i, /1\.\s/, /100%\s*brand\s*new/i];
+
+/**
+ * Fallback ES para productos SIN copy curado (spec SEO):
+ * `${titleEs} — Envío con seguimiento a México y EE.UU. · Pago seguro · Garantía de reposición.`
+ */
+const META_FALLBACK_ES = (titleEs: string) =>
+  `${titleEs} — Envío con seguimiento a México y EE.UU. · Pago seguro · Garantía de reposición.`;
+
+/** Limpia HTML: strip de tags, &nbsp; → espacio, colapsa whitespace y saltos de línea. */
+function cleanForMeta(raw: string): string {
+  return (raw || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Corta a ~max caracteres sin partir palabras; añade "…" solo si truncó. Nunca excede max. */
+function truncateForMeta(s: string, max: number): string {
+  if (s.length <= max) return s;
+  const cut = s.slice(0, max);
+  const lastSpace = cut.lastIndexOf(" ");
+  const end = lastSpace > max * 0.6 ? lastSpace : max - 1;
+  return s.slice(0, end).replace(/[,\s]+$/, "") + "…";
+}
+
+/**
+ * Meta description (SEO) curada por producto e idioma — usada en meta description,
+ * og:description y twitter:description de la PDP.
+ *
+ * - ES con copy curado: primer párrafo de `description`; si es vacío/insuficiente,
+ *   cae a hook → subtitle.
+ * - ES sin copy curado: `${titleEs} — Envío con seguimiento a México y EE.UU. ·
+ *   Pago seguro · Garantía de reposición.` (nunca el raw CJ).
+ * - EN con copy curado que tiene `descriptionEn`: mismo tratamiento de ~155 chars.
+ * - EN sin `descriptionEn`: `buildFallbackCopy(product, "en").subtitle`.
+ *
+ * Garantía dura: el resultado NUNCA contiene "Overview", "1. ", "100% brand new" ni
+ * texto raw CJ, y NUNCA está vacío (el fallback genérico es una constante estática).
+ */
+export function productMetaDescription(product: PublicProduct, lang: Lang): string {
+  const firstParagraph = (s: string): string => (s || "").split(/\n\s*\n/)[0] || "";
+
+  // Candidato válido: limpio, no vacío, sin fragmentos CJ.
+  const acceptable = (s: string): string | null => {
+    const clean = cleanForMeta(s);
+    if (!clean || clean.length < META_MIN_LEN) return null;
+    if (META_FORBIDDEN.some((re) => re.test(clean))) return null;
+    return clean;
+  };
+
+  const curated = getProductCopy(product);
+  let source: string | null = null;
+
+  if (curated) {
+    if (lang === "en") {
+      // EN: solo copy curado EN (descriptionEn); si no existe → fallback genérico EN.
+      if (curated.descriptionEn) {
+        source = acceptable(firstParagraph(curated.descriptionEn));
+      }
+      if (!source) source = acceptable(FALLBACK_SUBTITLE_EN);
+    } else {
+      source = acceptable(firstParagraph(curated.description));
+      if (!source) source = acceptable(curated.hook);
+      if (!source) source = acceptable(curated.subtitle);
+    }
+  }
+
+  // Sin copy curado (o el curado no rindió):
+  // - ES: fallback generado con el título ES + señales de confianza (spec SEO).
+  // - EN: genérico bilingüe limpio. NUNCA raw CJ.
+  if (!source) {
+    if (lang === "en") {
+      source = FALLBACK_SUBTITLE_EN;
+    } else {
+      source = META_FALLBACK_ES(productName(product, "es"));
+    }
+  }
+
+  return truncateForMeta(source, META_MAX_LEN);
+}
 
 /**
  * Copy curado en español por producto (source of truth para la PDP).
@@ -101,6 +234,7 @@ const REVIEW_AVG = 4.7;
  */
 const COPY_BY_ID: Record<string, ProductCopy> = {
   "cj-1602564551227224064": {
+    name: "Comedero Automático por Gravedad para Mascotas",
     hook: "Tu mascota siempre bien alimentada, aunque tú no estés en casa",
     subtitle:
       "Comedero automático por gravedad con tazón de acero inoxidable: la comida cae sola conforme tu perro o gato come. Sin cables, sin apps, sin complicaciones.",
@@ -179,8 +313,6 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
         text: "Compré uno para mi mamá que tiene 2 gatos. Fácil de armar, de limpiar y los gatos se adaptaron el mismo día. Recomendado.",
       },
     ],
-    reviewCount: REVIEW_COUNT,
-    reviewAvg: REVIEW_AVG,
     hookEn: "Your pet always well-fed, even when you're not home",
     subtitleEn:
       "Automatic gravity feeder with a stainless steel bowl: food drops on its own as your dog or cat eats. No cords, no apps, no fuss.",
@@ -271,6 +403,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     ],
   },
   "cj-67AC59CE-2442-42CE-8AB5-0BC899828DC3": {
+    name: "Dispensador de Bebidas",
     hook: "Tu bebida favorita, servida al instante sin levantar la botella",
     subtitle:
       "Dispensador de bebidas tipo upside-down: voltea tu botella o jarra y sirve con una sola mano. Perfecto para fiestas, cocina y oficina.",
@@ -335,6 +468,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.6,
   },
   "cj-1436180227997962240": {
+    name: "Guantes de Baño y Masaje para Mascotas",
     hook: "Baña a tu perro sin pelear: masaje + shampoo + limpieza en un solo guante",
     subtitle:
       "Guantes de silicón con cerdas suaves que masajean, limpian y reparten el shampoo mientras acaricias a tu mascota. Menos pelo suelto, más mimos.",
@@ -399,6 +533,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.7,
   },
   "cj-1382592991235018752": {
+    name: "Lámpara Nocturna LED de Hongo",
     hook: "Luz cálida tipo hongo que se enciende sola al oscurecer",
     subtitle:
       "Lámpara de noche decorativa con sensor de luz: se conecta directo a la toma, ilumina en cálido y se apaga de día. Ambiente acogedor sin cables visibles.",
@@ -463,6 +598,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.6,
   },
   "cj-1785940589914107904": {
+    name: "Prensa de Hielo Rápida",
     hook: "Cubos de hielo perfectos en 5 minutos, sin bandejas torcidas",
     subtitle:
       "Molde de hielo con prensa y tapa: hielo limpio, rápido y uniforme. Viene con caja de almacenamiento para tener hielo siempre listo.",
@@ -527,6 +663,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.7,
   },
   "cj-1738093507329404928": {
+    name: "Cepillo Eléctrico de Vapor para Gatos",
     hook: "Cepillo de vapor que peina, limpia y deja el pelo de tu gato suave en una pasada",
     subtitle:
       "Cepillo 3-en-1 con vapor para mascotas: vaporiza, peina y retira el pelo suelto. Ideal para gatos y perros de pelo medio y largo.",
@@ -591,6 +728,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.5,
   },
   "cj-1505824030824345600": {
+    name: "Cargador Rápido 60W con Organizador de Cables",
     hook: "Carga rápido y guarda ordenado: 60W y caja de almacenamiento en uno",
     subtitle:
       "Cargador rápido de 60W con caja organizadora: carga tu celular, tablet o laptop y guarda cables y accesorios en el mismo lugar.",
@@ -644,6 +782,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.6,
   },
   "cj-2606200731181610800": {
+    name: "Tope de Seguridad para Cabrestante",
     hook: "Protege tu cabrestante: tope de seguridad para winch",
     subtitle:
       "Stopper para cabrestante (winch) que evita que el cable se desenrolle de golpe. Pieza esencial para quien usa su winch en off-road o taller.",
@@ -689,6 +828,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.8,
   },
   "cj-1635691225099546624": {
+    name: "Peine Desenredante para Gatos",
     hook: "Peine desenredante que masajea y quita pelo suelto de tu gato",
     subtitle:
       "Peine para gatos con cerdas suaves que desenredan, masajean la piel y retiran el pelo muerto. Menos bolas de pelo en casa.",
@@ -741,6 +881,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.6,
   },
   "cj-0EA97770-A7AE-4D62-98F7-570652800B9A": {
+    name: "Cesto Multiusos de Cocina",
     hook: "Organiza cocina y lavandería sin ocupar espacio",
     subtitle:
       "Organizador grueso para cocina y lavandería: guarda utensilios, limpiadores o accesorios en un solo módulo resistente.",
@@ -793,6 +934,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.5,
   },
   "cj-1610875198524370944": {
+    name: "Cajas Organizadoras para Refrigerador",
     hook: "Tu refrigerador ordenado: cajas transparentes para todo",
     subtitle:
       "Caja organizadora tipo cajón para refrigerador: guarda y separa alimentos, bebidas o sobras de forma transparente y apilable.",
@@ -845,6 +987,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.6,
   },
   "cj-1416373464742367232": {
+    name: "Soportes Retráctiles para Libros",
     hook: "Tus libros en su lugar: soportes retráctiles para estantería",
     subtitle:
       "Soportes de libros retráctiles que se ajustan al grosor de tu colección y mantienen todo firme en la repisa.",
@@ -897,6 +1040,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.5,
   },
   "cj-1384083417456578560": {
+    name: "Soporte de Carga para Celular",
     hook: "Soporte de carga para celular: pega, carga y ordena",
     subtitle:
       "Soporte de almacenamiento para carga de celular: se adhiere sin perforar y mantiene tu teléfono y cables en orden mientras carga.",
@@ -949,6 +1093,7 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewAvg: 4.5,
   },
   "cj-1478664619944972288": {
+    name: "Botella Deportiva con Spray",
     hook: "Botella con spray: hidrátate y rocía cuando lo necesites",
     subtitle:
       "Botella de agua con pulverizador integrado: bebe y rocía para refrescarte en deporte, playa o día de calor.",
@@ -1006,6 +1151,22 @@ export function getProductCopy(product: PublicProduct): ProductCopy | null {
   return COPY_BY_ID[product.id] ?? null;
 }
 
+/**
+ * Datos de reseñas para el GRID (ProductCard), consistentes con la PDP.
+ * Decisión de negocio d109: se elimina el agregado seeded/legacy
+ * (4.5/4.7/31/47). El grid muestra SIEMPRE el estado honesto "Nuevo"
+ * (rating 0 / count 0); las reseñas reales (si existen) se muestran
+ * individualmente en la PDP, jamás como puntaje agregado.
+ *
+ * Pura (sin window/localStorage): segura para SSR e hidratación.
+ */
+export function productReviewBadge(_product: PublicProduct): {
+  rating: number;
+  reviewCount: number;
+} {
+  return { rating: 0, reviewCount: 0 };
+}
+
 /** Copy genérico bilingüe para productos sin copy curado (la mayoría de CJ). */
 export function buildFallbackCopy(product: PublicProduct, lang: Lang): ProductCopy {
   const clean = (product.description || "")
@@ -1016,10 +1177,7 @@ export function buildFallbackCopy(product: PublicProduct, lang: Lang): ProductCo
   const g = (es: string, enText: string) => (en ? enText : es);
   return {
     hook: productName(product, lang),
-    subtitle: g(
-      "Seleccionado y enviado directamente desde el almacén a tu puerta. Envíos a México y Estados Unidos con rastreo.",
-      "Hand-picked and shipped directly from the warehouse to your door. Tracked shipping to Mexico and the United States."
-    ),
+    subtitle: g(FALLBACK_SUBTITLE_ES, FALLBACK_SUBTITLE_EN),
     benefits: [
       g(
         "Producto real verificado con stock disponible",

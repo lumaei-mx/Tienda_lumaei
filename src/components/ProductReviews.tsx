@@ -38,15 +38,12 @@ export function ProductReviews({ product }: { product: PublicProduct }) {
         <h2 className="font-serif text-2xl font-semibold text-brown">
           {t("reviewsTitle", lang)}
         </h2>
-        <div className="flex items-center gap-2">
-          <span className="font-serif text-3xl font-semibold text-brown">{copy.reviewAvg}</span>
-          <div>
-            <Stars n={copy.reviewAvg} />
-            <p className="text-xs text-brown-soft">
-              {copy.reviewCount} {t("reviewsVerified", lang)}
-            </p>
-          </div>
-        </div>
+        {/* Decisión d109: NUNCA mostrar agregado legacy (copy.reviewAvg /
+            copy.reviewCount seeded 4.7/31/47). Estado honesto "Nuevo" + las
+            reseñas reales individuales de abajo (sin puntaje agregado). */}
+        <span className="rounded-full border border-gold/30 bg-ivory px-3 py-1 text-[11px] font-medium tracking-wide text-brown-soft">
+          {t("newLabel", lang)}
+        </span>
       </div>
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">

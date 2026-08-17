@@ -1,4 +1,5 @@
 import { storageGet, storageSet, isRedisAvailable } from "@/lib/storage";
+import { sendTelegramMessage, isTelegramConfigured } from "@/lib/notify-telegram";
 
 const COLLECTION = "meta";
 const DOC = "alerts";
@@ -48,6 +49,13 @@ export async function pushAlert(
  */
 export async function notifyOwner(kind: string, message: string, level: AlertLevel = "warn") {
   await pushAlert(kind, message, level);
+  // Push también a Telegram si está configurado: el dueño recibe la alerta en
+  // el móvil en tiempo real, sin depender del panel de admin.
+  if (isTelegramConfigured()) {
+    const tag = level === "critical" ? "🔴" : level === "warn" ? "🟡" : "🟢";
+    const text = `${tag} *Lumaei · ${kind}*\n${message}`;
+    await sendTelegramMessage(text).catch(() => {});
+  }
 }
 
 export async function resolveAlert(id: string) {

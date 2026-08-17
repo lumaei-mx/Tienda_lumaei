@@ -7,6 +7,11 @@ import type { Lang } from "./i18n";
 
 interface CartState {
   items: CartItem[];
+  // Ref de afiliado capturado desde una PDP con `?ref=@handle`. Viaja con el
+  // carrito hasta el POST /api/checkout y se persiste en la Order (comisión 15%).
+  // Se resetea en clear() para no atribuir compras futuras con un ref viejo.
+  ref: string | null;
+  setRef: (ref: string | null) => void;
   // Idioma de la tienda (ES/EN) — el toggle del header cambia esto, NO la moneda.
   lang: Lang;
   setLang: (lang: Lang) => void;
@@ -25,6 +30,8 @@ export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      ref: null,
+      setRef: (ref) => set({ ref }),
       // IMPORTANTE: inicia SIEMPRE en "es" para que el SSR (server store) y la
       // primera render del cliente coincidan (evita error de hidratación React
       // #418). LangHydrate ajusta el idioma real desde la cookie tras el mount.
@@ -38,7 +45,12 @@ export const useCart = create<CartState>()(
         set({ lang });
       },
       market: "MX",
-      setMarket: (market) => set({ market }),
+      setMarket: (market) => {
+        if (typeof document !== "undefined") {
+          document.cookie = `lumaei-market=${market};path=/;max-age=31536000;samesite=lax`;
+        }
+        set({ market });
+      },
       add: (productId, qty = 1) => {
         const items = [...get().items];
         const idx = items.findIndex((i) => i.productId === productId);
@@ -59,7 +71,7 @@ export const useCart = create<CartState>()(
           ),
         });
       },
-      clear: () => set({ items: [] }),
+      clear: () => set({ items: [], ref: null }),
       count: () => get().items.reduce((n, i) => n + i.qty, 0),
     }),
     { name: "lumaei-cart", skipHydration: true }

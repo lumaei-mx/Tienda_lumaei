@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createPendingOrder } from "@/lib/checkout";
 import { isStripeConfigured } from "@/lib/stripe";
 import { localizeCheckoutError } from "@/lib/checkout-errors";
+import { normalizeRef } from "@/lib/types";
 import type { Address, CartItem, Customer, Market } from "@/lib/types";
 
 export async function POST(req: Request) {
@@ -27,6 +28,9 @@ export async function POST(req: Request) {
       customer,
       shippingAddress,
       promoCode: typeof body.promoCode === "string" ? body.promoCode : undefined,
+      // C2: ref de afiliado normalizado (trim + trunc 120). Sin ref → undefined
+      // → la Order NO lleva el campo (C4).
+      ref: normalizeRef(body.ref),
     });
 
     // Stripe real

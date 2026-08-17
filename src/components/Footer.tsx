@@ -4,6 +4,7 @@ import Image from "next/image";
 import { settings } from "@/lib/settings";
 import { useCart } from "@/lib/cart-store";
 import { t } from "@/lib/i18n";
+import { STORE_IDENTITY } from "@/lib/identity";
 
 export function Footer() {
   const lang = useCart((s) => s.lang);
@@ -18,6 +19,11 @@ export function Footer() {
             height={145}
             className="h-28 w-auto rounded-lg bg-ivory object-contain p-2"
           />
+          <p className="mt-4 max-w-[15rem] text-xs leading-relaxed text-ivory/70">
+            {lang === "es"
+              ? `Operado por ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEs} · RFC ${STORE_IDENTITY.rfc} · ${STORE_IDENTITY.onlineNoteEs} · ${STORE_IDENTITY.domicilePublic}`
+              : `Operated by ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEn} · RFC ${STORE_IDENTITY.rfc} · ${STORE_IDENTITY.onlineNoteEn} · ${STORE_IDENTITY.domicilePublic}`}
+          </p>
         </div>
         <div>
           <p className="font-serif text-lg text-gold-light">
@@ -36,7 +42,7 @@ export function Footer() {
           <ul className="mt-3 space-y-2 text-sm text-ivory/75">
             <li><a href="/envios" className="transition hover:text-gold-light">{t("footerHelp1", lang)}</a></li>
             <li><a href="/devoluciones" className="transition hover:text-gold-light">{t("footerHelp2", lang)}</a></li>
-            <li><a href="/terminos" className="transition hover:text-gold-light">{t("footerHelp3", lang)}</a></li>
+            <li><a href="/privacidad" className="transition hover:text-gold-light">{t("footerHelp3", lang)}</a></li>
             <li><a href="/sobre-nosotros" className="transition hover:text-gold-light">{t("footerHelp4", lang)}</a></li>
           </ul>
         </div>

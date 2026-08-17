@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getOrder, readOrders } from "@/lib/orders-db";
 import { getRetryItem } from "@/lib/automation/queue";
 import { formatMoney } from "@/lib/money";
+import ApproveOrderButton from "@/components/admin/ApproveOrderButton";
 
 export const dynamic = "force-dynamic";
 
@@ -30,11 +31,13 @@ export default async function AdminOrderDetailPage({
   const statusBadge =
     order.status === "pending_payment"
       ? "bg-amber-100 text-amber-900"
-      : ["sent_to_cj", "shipped", "delivered"].includes(order.status)
-        ? "bg-emerald-100 text-emerald-800"
-        : order.status === "cancelled" || order.status === "failed"
-          ? "bg-red-100 text-red-800"
-          : "bg-gold/20 text-gold-dark";
+      : order.status === "awaiting_owner_approval"
+        ? "bg-indigo-100 text-indigo-800"
+        : ["sent_to_cj", "shipped", "delivered"].includes(order.status)
+          ? "bg-emerald-100 text-emerald-800"
+          : order.status === "cancelled" || order.status === "failed"
+            ? "bg-red-100 text-red-800"
+            : "bg-gold/20 text-gold-dark";
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
@@ -53,6 +56,16 @@ export default async function AdminOrderDetailPage({
           {order.status}
         </span>
       </div>
+
+      {order.status === "awaiting_owner_approval" && (
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-indigo-300 bg-indigo-50 p-4">
+          <p className="text-sm text-indigo-900">
+            <span className="font-semibold">Esperando tu autorización.</span>{" "}
+            Al aprobar se libera saldo del proveedor (gasto) y se notifica al cliente.
+          </p>
+          <ApproveOrderButton orderId={order.id} />
+        </div>
+      )}
 
       {/* Datos del cliente */}
       <section className="mt-6 rounded-2xl border border-gold/20 bg-ivory p-6">
@@ -85,6 +98,34 @@ export default async function AdminOrderDetailPage({
           </dd>
         </div>
       </section>
+
+      {/* Afiliado (programa de influencers) — solo cuando el pedido trae ref */}
+      {order.ref && (
+        <section className="mt-6 rounded-2xl border border-gold/40 bg-cream p-6">
+          <h2 className="font-serif text-xl font-semibold text-brown">
+            Afiliado · comisión
+          </h2>
+          <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-xs uppercase tracking-wider text-brown-soft">
+                Ref (handle del influencer)
+              </dt>
+              <dd className="font-mono font-semibold text-gold-dark">{order.ref}</dd>
+            </div>
+            <div>
+              <dt className="text-xs uppercase tracking-wider text-brown-soft">
+                Comisión 15% estimada
+              </dt>
+              <dd className="font-medium text-brown">
+                ${(order.total * 0.15).toFixed(2)} USD sobre {formatMoney(order.total)}
+              </dd>
+            </div>
+          </dl>
+          <p className="mt-2 text-xs text-brown-soft">
+            Atribuido vía ?ref= al abrir la PDP. Verifica el handle en TikTok antes de pagar.
+          </p>
+        </section>
+      )}
 
       {/* Items */}
       <section className="mt-6 rounded-2xl border border-gold/20 bg-ivory p-6">

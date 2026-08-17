@@ -3,12 +3,32 @@ export type Currency = "USD";
 export type OrderStatus =
   | "pending_payment"
   | "paid"
+  | "awaiting_owner_approval"
   | "fulfillment_queued"
   | "sent_to_cj"
   | "shipped"
   | "delivered"
   | "cancelled"
   | "failed";
+
+export interface Provenance {
+  brand?: string;
+  manufacturer?: string;
+  model?: string;
+  countryOfOrigin?: string;
+  /** Proveedor de origen del producto: "CJ" | "Zendrop" | "Spocket" | etc. */
+  supplier?: string;
+  /** ID de certificación FCC (electrónicos/RF con destino US) o "SDoC". */
+  certFcc?: string;
+  certCe?: boolean;
+  nom024?: boolean;
+  certUl?: boolean;
+  rohs?: boolean;
+  manualUrl?: string;
+  fichaTecnicaUrl?: string;
+  garantiaMeses?: number;
+  notes?: string;
+}
 
 export interface Product {
   id: string;
@@ -38,6 +58,7 @@ export interface Product {
   reviews: number;
   featured?: boolean;
   active: boolean;
+  provenance?: Provenance;
 }
 
 /**
@@ -59,6 +80,7 @@ export interface PublicProduct {
   reviews: number;
   tags: string[];
   featured?: boolean;
+  provenance?: Provenance;
 }
 
 /** Sanitiza un Product interno → PublicProduct (strip de datos sensibles). */
@@ -77,7 +99,21 @@ export function toPublicProduct(p: Product): PublicProduct {
     reviews: p.reviews,
     tags: p.tags,
     featured: p.featured,
+    provenance: p.provenance ?? { supplier: "CJ", garantiaMeses: 90 },
   };
+}
+
+/**
+ * Normaliza un ref de afiliado (query param `?ref=`).
+ * Acepta el handle con `@` (ej: "@yosoyhachi") o sin él, hace trim y trunca a
+ * 120 chars. Devuelve undefined para vacíos/no-string (así la Order NO lleva
+ * el campo si no hay ref, cumpliendo C4). Pura → usable en server y cliente.
+ */
+export function normalizeRef(raw: unknown): string | undefined {
+  if (typeof raw !== "string") return undefined;
+  const s = raw.trim();
+  if (!s) return undefined;
+  return s.slice(0, 120);
 }
 
 export interface CartItem {
@@ -136,6 +172,10 @@ export interface Order {
   /** Descuento por promo aplicada (moneda del pedido) */
   discount?: number;
   promoCode?: string;
+  /** Ref de afiliado (`?ref=` del programa de influencers, ej: "@yosoyhachi").
+   *  Se persiste para pagar la comisión desde el admin. Ausente si la compra
+   *  no vino de un link de afiliado. */
+  ref?: string;
   cjOrderId?: string;
   /** ID real de la orden de envío en CJ (formato CJ2608...) — usado para pagos */
   cjOrderRealId?: string;
@@ -178,6 +218,10 @@ export interface StoreSettings {
   markup?: number;
   /** Margen mínimo % para no vender pérdida (reprice detiene si lo baja) */
   minMarginPct?: number;
+  /** Comisión del influencer (programa de afiliados TikTok). Se incluye DENTRO
+   *  del precio de venta: el precio piso ya reserva este % para pagar al
+   *  creador, así no vendemos pérdida al repartir comisión. Default 15. */
+  influencerCommissionPct?: number;
   /** Tipo de cambio USD→MXN para cobrar en pesos en México (OXXO/SPEI) */
   usdToMxn?: number;
 }

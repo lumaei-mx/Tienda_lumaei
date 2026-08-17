@@ -15,13 +15,11 @@ import type {
   Order,
   OrderItem,
 } from "./types";
-import { fulfillOrder, isCjBalanceError } from "./cj";
 import { getOrder, saveOrder, updateOrder } from "./orders-db";
-import { enqueueRetry } from "./automation/queue";
 import { notifyOwner } from "./automation/alert";
 import { incrementPromoUsage, validatePromo } from "./promo-db";
 import { trackOrderPaid } from "./tiktok-events";
-import { sendOrderConfirmation } from "./email";
+import { sendOrderAwaitingApproval, sendOwnerApprovalRequest } from "./email";
 
 export interface CheckoutInput {
   items: CartItem[];
@@ -29,6 +27,8 @@ export interface CheckoutInput {
   customer: Customer;
   shippingAddress: Address;
   promoCode?: string;
+  /** Ref de afiliado normalizado (programa de influencers). Opcional. */
+  ref?: string;
 }
 
 /**
@@ -110,6 +110,7 @@ export async function createPendingOrder(input: CheckoutInput): Promise<Order> {
     subtotal,
     discount: discount > 0 ? discount : undefined,
     promoCode,
+    ref: input.ref,
     shipping,
     tax,
     total,
@@ -148,7 +149,6 @@ export async function confirmPaidOrder(
     return order;
   }
 
-  const storeSettings = await readStoreSettings();
   const now = new Date().toISOString();
 
   // Conversión TikTok (server-side, fire-and-forget) — solo una vez por pedido.
@@ -176,67 +176,46 @@ export async function confirmPaidOrder(
     "info"
   ).catch(() => {});
 
-  // Email de confirmación al cliente — se dispara EN PARALELO con el fulfill
-  // para no bloquear el webhook; el resultado se persiste en la orden abajo.
+  // === GATE de autorización GM ===
+  // El cumplimiento libera saldo del proveedor (efectivo). El dueño debe
+  // autorizarlo. Tras el pago el pedido queda en `awaiting_owner_approval` y se
+  // NOTIFICA al dueño para que apruebe desde el admin. El cliente recibe
+  // "pago recibido / en autorización", NO la confirmación de envío (esa se
+  // envía al aprobar, en la ruta admin de aprobación).
   type EmailResult = { ok: boolean; skipped?: boolean; error?: string };
-  const emailPromise: Promise<EmailResult> = sendOrderConfirmation(updated)
+  const emailPromise: Promise<EmailResult> = sendOrderAwaitingApproval(updated)
     .catch((err): EmailResult => ({
       ok: false,
       error: err instanceof Error ? err.message : "error enviando email",
     }));
+  const ownerEmailPromise: Promise<EmailResult> = sendOwnerApprovalRequest(updated)
+    .catch((err): EmailResult => ({
+      ok: false,
+      error: err instanceof Error ? err.message : "error",
+    }));
 
-  // solo tras pago verificado → CJ
-  if (storeSettings.autoFulfill) {
-    // Estado intermedio persistente ANTES de tocar CJ: si el proceso muere a
-    // mitad del fulfill (timeout), el cron retry-fulfill retoma el pedido.
-    updated = {
-      ...updated,
-      status: "fulfillment_queued",
-      updatedAt: new Date().toISOString(),
-    };
-    await saveOrder(updated);
-    try {
-      updated = await fulfillOrder(updated);
-      await saveOrder(updated);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "error";
-      const isBalance = isCjBalanceError(msg);
-      updated = {
-        ...updated,
-        status: "fulfillment_queued",
-        notes: `Auto-fulfill falló: ${msg}${
-          isBalance
-            ? ". Balance CJ insuficiente — fondear la cuenta CJ y reintentar manualmente."
-            : ". En cola de reintento automático."
-        }`,
-        updatedAt: new Date().toISOString(),
-      };
-      await saveOrder(updated);
-      if (isBalance) {
-        // Un balance insuficiente NO se cura reintentando: solo fondear la
-        // cuenta CJ. Alerta crítica accionable, sin cola de reintento ciego.
-        await notifyOwner(
-          "cj_balance_insufficient",
-          `Pedido ${orderId}: balance CJ insuficiente. Fondear la cuenta CJ y reintentar manualmente.`,
-          "critical"
-        ).catch(() => {});
-      } else {
-        await enqueueRetry(orderId, msg);
-        await notifyOwner("fulfill_failed", `Pedido ${orderId}: ${msg}`, "warn");
-      }
-    }
-  } else {
-    updated = {
-      ...updated,
-      status: "fulfillment_queued",
-      updatedAt: new Date().toISOString(),
-    };
-    await saveOrder(updated);
-  }
+  updated = {
+    ...updated,
+    status: "awaiting_owner_approval",
+    updatedAt: new Date().toISOString(),
+  };
+  await saveOrder(updated);
 
-  // Cierre del email: persiste el resultado real en la orden y alerta al owner
-  // cuando NO se envió. El estado "sent" no alerta (es el comportamiento esperado).
-  const emailResult = await emailPromise;
+  await notifyOwner(
+    "order_awaiting_approval",
+    `Pedido ${orderId} (${updated.market}) requiere tu autorización para cumplir. Ganancia est. $${updated.estimatedProfitUsd.toFixed(
+      2
+    )} USD · COGS $${updated.cogsUsd.toFixed(2)} + envío $${updated.shippingCostUsd.toFixed(
+      2
+    )}. Ábrelo en /admin/pedido/${orderId}.`,
+    "info"
+  ).catch(() => {});
+
+  // Cierre: persiste el resultado de AMBOS emails y alerta cuando alguno falla.
+  const [emailResult, ownerResult] = await Promise.all([
+    emailPromise,
+    ownerEmailPromise,
+  ]);
   const emailStatus: Order["emailStatus"] = emailResult.skipped
     ? "skipped"
     : emailResult.ok
@@ -246,19 +225,33 @@ export async function confirmPaidOrder(
     ...updated,
     emailStatus,
     emailError: emailResult.ok || emailResult.skipped ? undefined : emailResult.error,
+    notes: ownerResult.ok
+      ? updated.notes
+      : `${updated.notes ? updated.notes + " " : ""}Aviso al dueño (email) ${
+          ownerResult.skipped
+            ? "omitido (sin GMAIL_APP_PASSWORD)"
+            : `falló: ${ownerResult.error}`
+        }.`,
   };
   await saveOrder(updated);
 
   if (emailResult.skipped) {
     await notifyOwner(
       "email_not_configured",
-      `Pedido ${orderId}: el email de confirmación NO se envió (falta GMAIL_APP_PASSWORD). Activarlo en Fase 2.`,
+      `Pedido ${orderId}: el email de autorización NO se envió (falta GMAIL_APP_PASSWORD).`,
       "warn"
     ).catch(() => {});
   } else if (!emailResult.ok) {
     await notifyOwner(
       "email_failed",
-      `Pedido ${orderId}: falló el email de confirmación (${emailResult.error}). Reenviar desde admin.`,
+      `Pedido ${orderId}: falló el email de autorización (${emailResult.error}).`,
+      "warn"
+    ).catch(() => {});
+  }
+  if (!ownerResult.ok && !ownerResult.skipped) {
+    await notifyOwner(
+      "owner_email_failed",
+      `Pedido ${orderId}: falló el email de autorización al dueño (${ownerResult.error}).`,
       "warn"
     ).catch(() => {});
   }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/lib/cart-store";
 import { t } from "@/lib/i18n";
+import { STORE_IDENTITY } from "@/lib/identity";
 
 export default function SobreNosotrosPage() {
   const lang = useCart((s) => s.lang);
@@ -19,6 +20,12 @@ export default function SobreNosotrosPage() {
         <p>{t("aboutP1", lang)}</p>
         <p>{t("aboutP2", lang)}</p>
         <p>{t("aboutP3", lang)}</p>
+
+        <p className="mt-4 rounded-xl border border-gold/20 bg-ivory/5 p-4 text-sm">
+          {lang === "es"
+            ? `Lumaei es operado por ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEs} (RFC ${STORE_IDENTITY.rfc}). ${STORE_IDENTITY.onlineNoteEs}, con domicilio fiscal en ${STORE_IDENTITY.domicilePublic}.`
+            : `Lumaei is operated by ${STORE_IDENTITY.responsibleName}, ${STORE_IDENTITY.entityTypeEn} (RFC ${STORE_IDENTITY.rfc}). ${STORE_IDENTITY.onlineNoteEn}, with fiscal domicile in ${STORE_IDENTITY.domicilePublic}.`}
+        </p>
 
         <h2 className="font-serif text-2xl font-semibold text-brown">
           {t("aboutCommitT", lang)}

@@ -61,6 +61,7 @@ export default async function PedidoPage({
     {
       pending_payment: "orderStatusPendingPayment",
       paid: "orderStatusPaid",
+      awaiting_owner_approval: "orderStatusAwaitingApproval",
       fulfillment_queued: "orderStatusQueued",
       sent_to_cj: "orderStatusSent",
       shipped: "orderStatusShipped",

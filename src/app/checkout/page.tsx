@@ -12,6 +12,7 @@ import {
   productPrice,
 } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { productName } from "@/lib/copy";
 import { identifyUser, trackInitiateCheckout } from "@/lib/tiktok-pixel";
 import { BackButton } from "@/components/BackButton";
 import type { Market } from "@/lib/types";
@@ -19,6 +20,7 @@ import type { Market } from "@/lib/types";
 export default function CheckoutPage() {
   const router = useRouter();
   const items = useCart((s) => s.items);
+  const ref = useCart((s) => s.ref);
   const lang = useCart((s) => s.lang);
   const { byId } = useProducts();
   const { settings } = useStoreSettings();
@@ -176,6 +178,9 @@ export default function CheckoutPage() {
           items,
           market,
           lang,
+          // Ref de afiliado capturado en el carrito (PDP ?ref=). undefined si no
+          // hubo ref → el servidor NO persiste el campo (C4).
+          ref: ref ?? undefined,
           promoCode: promoState?.valid ? promoState.code : undefined,
           customer: {
             name: form.name,
@@ -321,7 +326,7 @@ export default function CheckoutPage() {
             return (
               <li key={i.productId} className="flex justify-between gap-2">
                 <span className="text-brown-soft">
-                  {p.name} × {i.qty}
+                  {productName(p, lang)} × {i.qty}
                 </span>
                 <span>{formatPrice(productPrice(p) * i.qty, lang)}</span>
               </li>

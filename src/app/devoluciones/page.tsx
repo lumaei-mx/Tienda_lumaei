@@ -43,6 +43,11 @@ export default function DevolucionesPage() {
           </li>
           <li>{t("retHow3", lang)}</li>
         </ul>
+
+        <h2 className="font-serif text-2xl font-semibold text-brown">
+          {t("retLegalT", lang)}
+        </h2>
+        <p>{t("retLegal", lang)}</p>
       </div>
 
       <Link
