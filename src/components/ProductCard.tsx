@@ -11,6 +11,7 @@ import { useStoreSettings } from "@/lib/use-store-settings";
 import { productName, productReviewBadge } from "@/lib/copy";
 import { groupCategory, groupLabel } from "@/lib/categories";
 import { trackAddToCart } from "@/lib/tiktok-pixel";
+import { TrustSeal } from "@/components/TrustSeal";
 
 export function ProductCard({
   product,
@@ -70,6 +71,9 @@ export function ProductCard({
         <p className="mt-2 text-lg font-semibold text-gold-dark">
           {formatByMarket(price, market, settings.usdToMxn)}
         </p>
+        <div className="mt-2">
+          <TrustSeal />
+        </div>
         <button
           type="button"
           onClick={() => {
