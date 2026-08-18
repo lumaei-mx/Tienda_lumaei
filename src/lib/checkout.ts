@@ -256,6 +256,48 @@ export async function confirmPaidOrder(
     ).catch(() => {});
   }
 
+  // Auto-aprobación opcional: si AUTO_APPROVE_ORDERS=true, se salta la espera
+  // de autorización del dueño y se envía a cumplimiento inmediatamente.
+  if (process.env.AUTO_APPROVE_ORDERS === "true") {
+    try {
+      await updateOrder(orderId, {
+        status: "fulfillment_queued",
+        updatedAt: new Date().toISOString(),
+      });
+      const { fulfillOrder } = await import("@/lib/cj");
+      const fulfilled = await fulfillOrder(updated);
+      await saveOrder(fulfilled);
+
+      // Aviso real al cliente: confirmación de pedido en camino
+      const { sendOrderConfirmation } = await import("@/lib/email");
+      const email = await sendOrderConfirmation(fulfilled);
+      await updateOrder(orderId, {
+        emailStatus: email.skipped ? "skipped" : email.ok ? "sent" : "error",
+        emailError: email.ok || email.skipped ? undefined : email.error,
+      });
+
+      await notifyOwner(
+        "order_auto_approved",
+        `Pedido ${orderId} auto-aprobado y enviado a cumplimiento (flag AUTO_APPROVE_ORDERS). Estado: ${fulfilled.cjOrderStatus || fulfilled.status}.`,
+        "info"
+      ).catch(() => {});
+
+      return fulfilled;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "error auto-fulfill";
+      await updateOrder(orderId, {
+        status: "fulfillment_queued",
+        notes: `Auto-fulfill falló: ${msg}. Revisión manual o reintentar.`,
+        updatedAt: new Date().toISOString(),
+      });
+      await notifyOwner(
+        "auto_fulfill_failed",
+        `Pedido ${orderId}: auto-fulfill falló (${msg}).`,
+        "critical"
+      ).catch(() => {});
+    }
+  }
+
   return updated;
 }
 
