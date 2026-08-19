@@ -15,6 +15,7 @@ import { t } from "@/lib/i18n";
 import { productName } from "@/lib/copy";
 import { identifyUser, trackInitiateCheckout } from "@/lib/tiktok-pixel";
 import { BackButton } from "@/components/BackButton";
+import { ShieldCheck, Truck, Lock } from "lucide-react";
 import type { Market } from "@/lib/types";
 
 export default function CheckoutPage() {
@@ -316,6 +317,20 @@ export default function CheckoutPage() {
             · {t("fxRateLabel", lang)} 1 USD = ${fxRate.toFixed(2)} MXN
           </p>
         )}
+        <ul className="mt-3 space-y-1.5 text-[11px] text-brown-soft">
+          <li className="flex items-center gap-2">
+            <ShieldCheck size={13} className="shrink-0 text-gold-dark" strokeWidth={1.8} />
+            {t("checkoutTrustG", lang)}
+          </li>
+          <li className="flex items-center gap-2">
+            <Truck size={13} className="shrink-0 text-gold-dark" strokeWidth={1.8} />
+            {t("checkoutTrustS", lang)}
+          </li>
+          <li className="flex items-center gap-2">
+            <Lock size={13} className="shrink-0 text-gold-dark" strokeWidth={1.8} />
+            {t("checkoutTrustP", lang)}
+          </li>
+        </ul>
       </form>
 
       <aside className="h-fit rounded-2xl border border-gold/20 bg-ivory p-5 text-sm">
@@ -400,9 +415,32 @@ export default function CheckoutPage() {
               {t("apply", lang)}
             </button>
           </div>
+          {!promoState?.valid && (
+            <p className="mt-2 text-[11px] text-gold-dark">{t("promoHint", lang)}</p>
+          )}
+          {promoState?.valid && (
+            <p className="mt-2 text-xs font-medium text-gold-dark">
+              −{formatPrice(promoState.discount, lang)} ({promoState.code})
+            </p>
+          )}
           {promoState?.error && (
             <p className="mt-2 text-xs text-red-700">{promoState.error}</p>
           )}
+          {(settings.freeShippingMinQty || 0) > 0 &&
+            totalQty < settings.freeShippingMinQty && (
+              <p className="mt-2 text-[11px] text-brown-soft">
+                {t("cartFreeShipNeed", lang).replace(
+                  "{n}",
+                  String(settings.freeShippingMinQty - totalQty)
+                )}
+              </p>
+            )}
+          {(settings.freeShippingMinQty || 0) > 0 &&
+            totalQty >= settings.freeShippingMinQty && (
+              <p className="mt-2 text-[11px] font-medium text-gold-dark">
+                {t("cartFreeShipUnlocked", lang)}
+              </p>
+            )}
         </div>
       </aside>
     </div>

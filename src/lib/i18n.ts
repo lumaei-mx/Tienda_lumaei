@@ -81,6 +81,22 @@ const dict = {
     en: "Shipping & taxes are calculated based on your country at checkout.",
   },
   loadingCart: { es: "Cargando carrito…", en: "Loading cart…" },
+  cartFreeShipNeed: {
+    es: "Agrega {n} más para envío gratis",
+    en: "Add {n} more for free shipping",
+  },
+  cartFreeShipUnlocked: {
+    es: "¡Envío gratis desbloqueado!",
+    en: "Free shipping unlocked!",
+  },
+  cartPromoHint: {
+    es: "10% de bienvenida: usa LUMAI10 al pagar",
+    en: "10% welcome off: use LUMAI10 at checkout",
+  },
+  cartTrustLine: {
+    es: "90 días de garantía · Pago seguro Stripe",
+    en: "90-day guarantee · Secure Stripe payment",
+  },
 
   // Checkout
   checkoutTitle: { es: "Checkout", en: "Checkout" },
@@ -89,7 +105,23 @@ const dict = {
   yourOrder: { es: "Tu pedido", en: "Your order" },
   discount: { es: "Descuento", en: "Discount" },
   promoCode: { es: "Código de promo", en: "Promo code" },
+  promoHint: {
+    es: "¿Primera compra? Prueba LUMAI10 (10% off)",
+    en: "First order? Try LUMAI10 (10% off)",
+  },
   apply: { es: "Aplicar", en: "Apply" },
+  checkoutTrustG: {
+    es: "90 días de garantía · reposición si llega dañado",
+    en: "90-day guarantee · replace if damaged",
+  },
+  checkoutTrustS: {
+    es: "Envío gratis desde 2 piezas · con rastreo",
+    en: "Free shipping from 2 items · tracked",
+  },
+  checkoutTrustP: {
+    es: "Pago 100% seguro con Stripe",
+    en: "100% secure payment via Stripe",
+  },
   countryLabel: { es: "País de envío", en: "Shipping country" },
   countryMx: { es: "🇲🇽 México", en: "🇲🇽 Mexico" },
   countryUs: { es: "🇺🇸 Estados Unidos", en: "🇺🇸 United States" },
@@ -289,8 +321,8 @@ const dict = {
 
   // Barra superior envío gratis (full)
   freeShipBar: {
-    es: "Envío GRATIS desde {mx} a México · desde {us} a Estados Unidos · Precios en dólares (USD)",
-    en: "FREE shipping from {mx} to Mexico · from {us} to the US · Prices in USD",
+    es: "Envío GRATIS desde 2 piezas · o desde {mx} MX / {us} US · Precios en USD · Código LUMAI10 = 10%",
+    en: "FREE shipping from 2 items · or from {mx} MX / {us} US · Prices in USD · Code LUMAI10 = 10% off",
   },
 
   // Páginas de ayuda — comunes

@@ -35,6 +35,10 @@ export default function CarritoPage() {
   }[];
 
   const subtotal = lines.reduce((s, l) => s + l.price * l.qty, 0);
+  const totalQty = lines.reduce((n, l) => n + l.qty, 0);
+  const minQty = settings.freeShippingMinQty || 0;
+  const needForFree = minQty > 0 ? Math.max(0, minQty - totalQty) : 0;
+  const freeShipUnlocked = minQty > 0 && totalQty >= minQty;
 
   if (loading) {
     return (
@@ -130,7 +134,9 @@ export default function CarritoPage() {
           </div>
           <div className="flex justify-between">
             <dt className="text-brown-soft">{t("shipping", lang)}</dt>
-            <dd className="text-brown-soft">—</dd>
+            <dd className={freeShipUnlocked ? "font-semibold text-gold-dark" : "text-brown-soft"}>
+              {freeShipUnlocked ? t("free", lang) : "—"}
+            </dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-brown-soft">{t("iva", lang)}</dt>
@@ -141,7 +147,25 @@ export default function CarritoPage() {
             <dd>{formatByMarket(subtotal, market, settings.usdToMxn)}</dd>
           </div>
         </dl>
+
+        {minQty > 0 && (
+          <div
+            className={`mt-3 rounded-xl border px-3 py-2 text-xs ${
+              freeShipUnlocked
+                ? "border-gold/50 bg-cream text-brown"
+                : "border-gold/30 bg-white text-brown-soft"
+            }`}
+          >
+            {freeShipUnlocked
+              ? t("cartFreeShipUnlocked", lang)
+              : t("cartFreeShipNeed", lang).replace("{n}", String(needForFree))}
+          </div>
+        )}
+
         <p className="mt-3 text-xs text-brown-soft">{t("shippingNote", lang)}</p>
+        <p className="mt-2 text-xs font-medium text-gold-dark">{t("cartPromoHint", lang)}</p>
+        <p className="mt-1 text-[11px] text-brown-soft">{t("cartTrustLine", lang)}</p>
+
         <Link
           href="/checkout"
           className="mt-4 flex w-full items-center justify-center rounded-full bg-brown py-3 text-sm font-semibold tracking-wide text-ivory hover:bg-gold-dark"
