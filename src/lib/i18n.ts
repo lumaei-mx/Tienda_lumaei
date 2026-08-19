@@ -510,8 +510,8 @@ const dict = {
     en: "5 gadgets that save you 1h a day (seriously)",
   },
   leadSub: {
-    es: "La lista que ya uso en casa. Gratis, sin spam.",
-    en: "The list I already use at home. Free, no spam.",
+    es: "La lista que ya uso en casa. Te mando también 10% de descuento (LUMAI10) en tu 1ª compra. Gratis, sin spam.",
+    en: "The list I already use at home. I'll also send you 10% off (LUMAI10) on your first order. Free, no spam.",
   },
   leadCta: { es: "Enviármelo gratis", en: "Send it to me free" },
   leadEmailPlaceholder: { es: "tu@email.com", en: "you@email.com" },

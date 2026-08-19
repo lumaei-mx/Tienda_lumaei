@@ -7,6 +7,7 @@ import {
   saveLead,
 } from "@/lib/leads";
 import { sendLeadMagnetEmail } from "@/lib/email";
+import { ensureWelcomePromo } from "@/lib/seed";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,10 @@ export async function POST(req: Request) {
   }
 
   const saved = await saveLead(email, source);
+
+  // Asegura que el código de bienvenida exista para cuando el suscriptor
+  // lo aplique en el checkout (idempotente, no bloquea el flujo).
+  await ensureWelcomePromo().catch(() => {});
 
   // El envío del lead magnet es best-effort: nunca bloquea la respuesta.
   const mailResult = await sendLeadMagnetEmail(email);

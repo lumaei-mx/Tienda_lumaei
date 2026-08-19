@@ -1,6 +1,7 @@
 import { getOrder } from "./orders-db";
 import { readStoreSettings } from "./settings-db";
 import { formatMoney } from "./money";
+import { WELCOME_PROMO_CODE } from "./seed";
 import type { Order } from "./types";
 import nodemailer from "nodemailer";
 
@@ -518,9 +519,23 @@ export function buildLeadMagnetHtml(): string {
               5 gadgets que de verdad uso en casa y que juntos me ahorran más de una hora al día.
               Nada de relleno: solo lo que funciona.
             </p>
-            <p style="margin:0 0 24px;color:#6b5b48;font-size:15px;line-height:1.6;">
+            <p style="margin:0 0 16px;color:#6b5b48;font-size:15px;line-height:1.6;">
               Cada gadget tiene un enlace directo a la tienda por si quieres verlo en detalle.
             </p>
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f7f2ea;border-radius:12px;padding:16px;margin:0 0 24px;">
+              <tr>
+                <td style="font-size:13px;color:#8a7761;">Regalo de bienvenida por estar aquí:</td>
+              </tr>
+              <tr>
+                <td style="font-size:22px;font-weight:700;color:#2c1f14;padding-top:4px;">10% de descuento en tu 1ª compra</td>
+              </tr>
+              <tr>
+                <td style="padding-top:8px;">
+                  <span style="display:inline-block;background:#2c1f14;color:#f4e9d8;font-family:monospace;font-weight:700;letter-spacing:1px;font-size:15px;padding:6px 12px;border-radius:8px;">${WELCOME_PROMO_CODE}</span>
+                  <span style="font-size:13px;color:#6b5b48;margin-left:8px;">aplícalo al pagar.</span>
+                </td>
+              </tr>
+            </table>
             <a href="${leadMagnetUrl()}" style="display:inline-block;padding:12px 24px;background:#2c1f14;color:#f4e9d8;border-radius:999px;text-decoration:none;font-size:14px;font-weight:600;">
               Ver mi lista
             </a>
@@ -543,6 +558,8 @@ export function buildLeadMagnetText(): string {
     "5 gadgets que te ahorran 1h al día (en serio). Nada de relleno: solo lo que funciona.",
     "",
     `Ver la lista: ${leadMagnetUrl()}`,
+    "",
+    `Regalo de bienvenida: 10% de descuento en tu 1ª compra con el código ${WELCOME_PROMO_CODE} al pagar.`,
     "",
     "Si este correo no te dice nada, respóndenos y te sacamos de la lista.",
   ].join("\n");
