@@ -159,6 +159,17 @@ export function EmailCapturePopup() {
             <p className="font-serif text-2xl font-semibold text-brown">
               {t("leadConfirm", lang)}
             </p>
+            <p className="mt-2 text-sm text-brown-soft">
+              {lang === "es"
+                ? "Y tu 10% de descuento (LUMAI10) lo tienes aquí:"
+                : "Your 10% off (LUMAI10) is right here:"}
+            </p>
+            <Link
+              href="/guia/5-gadgets"
+              className="mt-4 inline-flex items-center justify-center rounded-full bg-brown px-5 py-2.5 text-sm font-semibold text-ivory transition hover:bg-gold-dark"
+            >
+              {lang === "es" ? "Ver mi lista + 10%" : "See my list + 10%"}
+            </Link>
           </div>
         ) : (
           <>
