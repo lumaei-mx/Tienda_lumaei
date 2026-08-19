@@ -206,6 +206,8 @@ export interface StoreSettings {
   secondaryMarket: Market;
   freeShippingMxUsd: number;
   freeShippingUsd: number;
+  /** Envío gratis por cantidad de artículos (0 = desactivado). Sube el ticket promedio. */
+  freeShippingMinQty: number;
   shippingFlatMxUsd: number;
   shippingFlatUsd: number;
   taxRateMx: number;

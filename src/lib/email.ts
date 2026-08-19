@@ -17,7 +17,7 @@ export function isEmailConfigured(): boolean {
 export function emailFrom(): string {
   return (
     process.env.EMAIL_FROM ||
-    `Lumaei <${process.env.GMAIL_USER || "no-reply@lumaei.shop"}>`
+    `Lumaei <${process.env.GMAIL_USER || "no-reply@lumaei.com"}>`
   );
 }
 
@@ -71,7 +71,7 @@ export function buildOrderConfirmationHtml(order: Order): string {
   const statusText = isEs
     ? "Tu pedido está confirmado y en preparación."
     : "Your order is confirmed and being prepared.";
-  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`;
+  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`;
   const settings = { brandName: "Lumaei" };
 
   return `<!doctype html>
@@ -181,8 +181,8 @@ export function buildOrderConfirmationText(order: Order): string {
     items,
     "",
     isEs
-      ? `Sigue tu pedido aquí: ${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`
-      : `Track your order here: ${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`,
+      ? `Sigue tu pedido aquí: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`
+      : `Track your order here: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`,
   ].join("\n");
 }
 
@@ -228,7 +228,7 @@ export function buildOrderAwaitingApprovalHtml(order: Order): string {
   const lang = langFor(order);
   const isEs = lang === "es";
   const ref = `#${order.id.replace(/[^a-zA-Z0-9]/g, "").slice(-6)}`;
-  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`;
+  const trackUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`;
   const settings = { brandName: "Lumaei" };
 
   return `<!doctype html>
@@ -315,8 +315,8 @@ export function buildOrderAwaitingApprovalText(order: Order): string {
     items,
     "",
     isEs
-      ? `Sigue tu pedido aquí: ${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`
-      : `Track your order here: ${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/pedido/${order.id}?key=${order.accessToken || ""}`,
+      ? `Sigue tu pedido aquí: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`
+      : `Track your order here: ${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/pedido/${order.id}?key=${order.accessToken || ""}`,
   ].join("\n");
 }
 
@@ -358,7 +358,7 @@ export function buildOwnerApprovalRequestHtml(order: Order): string {
   const lang = langFor(order);
   const isEs = lang === "es";
   const ref = `#${order.id.replace(/[^a-zA-Z0-9]/g, "").slice(-6)}`;
-  const adminUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/admin/pedido/${order.id}`;
+  const adminUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/admin/pedido/${order.id}`;
   const items = order.items
     .map(
       (i) =>
@@ -447,7 +447,7 @@ export function buildOwnerApprovalRequestText(order: Order): string {
     "",
     items,
     "",
-    `${process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop"}/admin/pedido/${order.id}`,
+    `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com"}/admin/pedido/${order.id}`,
   ].join("\n");
 }
 
@@ -494,7 +494,7 @@ export async function resendOrderConfirmationById(
 const LEAD_MAGNET_SLUG = "/guia/5-gadgets";
 
 function leadMagnetUrl(): string {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://lumaei.shop";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://www.lumaei.com";
   return `${base}${LEAD_MAGNET_SLUG}`;
 }
 

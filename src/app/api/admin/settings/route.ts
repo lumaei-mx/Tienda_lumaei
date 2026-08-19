@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 const NUMERIC_KEYS = [
   "freeShippingMxUsd",
   "freeShippingUsd",
+  "freeShippingMinQty",
   "shippingFlatMxUsd",
   "shippingFlatUsd",
   "taxRateMx",

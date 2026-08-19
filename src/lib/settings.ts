@@ -6,6 +6,7 @@ export const settings: StoreSettings = {
   secondaryMarket: "US",
   freeShippingMxUsd: 49,
   freeShippingUsd: 49,
+  freeShippingMinQty: 2,
   shippingFlatMxUsd: 9.99,
   shippingFlatUsd: 9.99,
   taxRateMx: 0.16,

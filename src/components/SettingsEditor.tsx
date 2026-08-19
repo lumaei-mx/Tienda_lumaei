@@ -15,6 +15,7 @@ const FIELDS: Array<{
   { key: "secondaryMarket", label: "Mercado secundario", type: "text" },
   { key: "freeShippingMxUsd", label: "Envío gratis MX (USD)", type: "number", step: 0.01 },
   { key: "freeShippingUsd", label: "Envío gratis US (USD)", type: "number", step: 0.01 },
+  { key: "freeShippingMinQty", label: "Envío gratis (mín # artículos, 0=off)", type: "number" },
   { key: "shippingFlatMxUsd", label: "Envío plano MX (USD)", type: "number", step: 0.01 },
   { key: "shippingFlatUsd", label: "Envío plano US (USD)", type: "number", step: 0.01 },
   { key: "taxRateMx", label: "IVA MX (0.16)", type: "number", step: 0.01 },

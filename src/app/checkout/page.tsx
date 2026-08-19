@@ -95,7 +95,8 @@ export default function CheckoutPage() {
 
   const discount = promoState?.valid ? promoState.discount : 0;
   const netSubtotal = Math.max(0, subtotal - discount);
-  const shippingNet = calcShipping(settings, netSubtotal, market);
+  const totalQty = items.reduce((n, i) => n + i.qty, 0);
+  const shippingNet = calcShipping(settings, netSubtotal, market, totalQty);
   const taxNet = calcTax(settings, netSubtotal, shippingNet, market);
   const totalNet = netSubtotal + shippingNet + taxNet;
 

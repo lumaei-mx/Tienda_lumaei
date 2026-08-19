@@ -136,3 +136,46 @@ Hola [Nombre/Gerente],
 - [ ] 500+ views acumuladas en reels seed
 - [ ] 10+ visitas a la tienda desde grupos/Reddit
 - [ ] 1+ orden nueva (además de f589)
+
+---
+
+## 8. ESTADO HOY (2026-08-14) — la tienda ya está lista para recibir tráfico
+
+**Cambios verificados en producción (lumaei.com) hoy:**
+- ✅ **21 productos con título corto en español** (grid, title tag, carrito, checkout). Antes eran keyword-soup CJ en inglés.
+- ✅ **Error de hidratación React #418 resuelto** (HTML inválido `<p><p>` en PDP → `<div><p>` válido). Consola limpia.
+- ✅ **Programa de afiliados LIVE**: cualquier link a la tienda con `?ref=@handle` captura el ref, viaja con el carrito y se persiste en la Order (visible en admin) → base para pagar el 15% de comisión.
+- ✅ Precio top seller pet actualizado: Guantes de Baño $17.84 (decisión pricing 2026-08-14).
+- ⚠️ Pendiente (backlog, no bloquea): meta description de PDPs sigue con copy CJ en inglés (SEO/CTR en Google); reviews en grid dicen "Nuevo" vs PDP "31 reseñas" (inconsistencia visible).
+
+**Señal de mercado crítica (hoy):** el único pedido real pagado (Michael García, US, pet) llegó SIN campaña activa → demanda latente pet en US. Los micro-influencers pet MX (TIER A) son el canal de menor costo para clientes reales.
+
+### Checklist del OWNER — HOY (30 min)
+
+| # | Acción | Herramienta | Detalle |
+|---|---|---|---|
+| 1 | **Fondear CJ** ($6.78+ depósito) | cjdropshipping.com | Pedido f589 → `sent_to_cj`. Sin esto, el cliente real que ya pagó no recibe nada. |
+| 2 | **DM a 4 influencers TIER A** (templates §3) | TikTok/IG | Personaliza el handle + producto (ver columna "Producto para ellos"). Regala producto + 15% con `?ref=`. |
+| 3 | **Seguimiento +48h** (template abajo) | TikTok/IG | Si no responden, reenvía con un ángulo nuevo. |
+| 4 | **Compartir 1 reel seed** (kitchen o pet) | TikTok Lumaei | No venta directa: valor/transformación. Link bio con `?ref=@lumaeimx`. |
+| 5 | **Confirmar acceso admin** (pedidos con ref) | lumaei.com/admin | Para ver qué orden llegó con qué `?ref=` y pagar comisiones correctas. |
+
+### Template de seguimiento (+48h sin respuesta)
+
+```
+Hola [Nombre] 👋 te escribí hace un par de días — no sé si te llegó mi mensaje.
+
+En Lumaei regalamos [PRODUCTO] + te damos 15% de comisión con tu link por cada venta.
+Solo necesitas 1 video con tu opinión honesta. Sin compromiso, sin exclusividad.
+
+¿Te late que te lo envíe? 🚀
+```
+
+### Formato del link de afiliado (ya funciona)
+
+```
+https://lumaei.com/productos/[slug]?ref=@handle
+Ej: https://lumaei.com/productos/silicone-dog-bath-massage-gloves-brush-pet-cat-bathroom-cleaning-tool-comb-brush?ref=@yosoyhachi
+```
+
+El ref queda grabado en la Order del admin → al final del mes se paga el 15% sobre órdenes con ese ref. Sin ref → sin comisión (justo para el influencer).

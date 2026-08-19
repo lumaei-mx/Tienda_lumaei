@@ -74,7 +74,8 @@ export async function createPendingOrder(input: CheckoutInput): Promise<Order> {
   }
   const netSubtotal = Math.max(0, subtotal - discount);
 
-  const shipping = calcShipping(s, netSubtotal, market);
+  const totalQty = input.items.reduce((n, i) => n + i.qty, 0);
+  const shipping = calcShipping(s, netSubtotal, market, totalQty);
   const tax = calcTax(s, netSubtotal, shipping, market);
   const total = Number((netSubtotal + shipping + tax).toFixed(2));
 
@@ -175,6 +176,15 @@ export async function confirmPaidOrder(
     } item(s).`,
     "info"
   ).catch(() => {});
+
+  // Afiliado: la comisión se acredita SOLO sobre venta real (profit neto).
+  // $0 costo fijo; la comisión sale de la ganancia del pedido.
+  if (updated.ref) {
+    const { creditAffiliateConversion } = await import("@/lib/affiliates");
+    creditAffiliateConversion(updated.ref, updated.estimatedProfitUsd).catch(
+      () => {}
+    );
+  }
 
   // === GATE de autorización GM ===
   // El cumplimiento libera saldo del proveedor (efectivo). El dueño debe

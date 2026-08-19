@@ -3,6 +3,8 @@ import { readProducts } from "@/lib/products-db";
 import { readOrders } from "@/lib/orders-db";
 import { formatMoney, marginForProduct } from "@/lib/money";
 import { readStoreSettings } from "@/lib/settings-db";
+import { listAffiliates } from "@/lib/affiliates";
+import AffiliatesCommissions, { type AffRow } from "@/components/AffiliatesCommissions";
 import { AdminOrders } from "@/components/AdminOrders";
 import { CjImportPanel } from "@/components/CjImportPanel";
 import { SettingsEditor } from "@/components/SettingsEditor";
@@ -15,10 +17,11 @@ import { ProductManagerPanel } from "@/components/ProductManagerPanel";
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  const [orders, products, storeSettings] = await Promise.all([
+  const [orders, products, storeSettings, affiliates] = await Promise.all([
     readOrders(),
     readProducts(),
     readStoreSettings(),
+    listAffiliates(),
   ]);
   const active = products.filter((p) => p.active);
   // Solo pedidos REALMENTE pagados cuentan para revenue/profit.
@@ -33,6 +36,33 @@ export default async function AdminPage() {
   const sent = orders.filter((o) =>
     ["sent_to_cj", "shipped", "delivered"].includes(o.status)
   ).length;
+
+  // T1 — Comisiones por afiliado: junta el registro del afiliado con las
+  // órdenes reales agrupadas por `ref` (fuente de verdad del volumen vendido).
+  const soldByRef = new Map<string, { count: number; sold: number }>();
+  for (const o of orders) {
+    if (!o.ref) continue;
+    const key = o.ref.replace(/^@/, "").toLowerCase();
+    const cur = soldByRef.get(key) || { count: 0, sold: 0 };
+    cur.count += 1;
+    cur.sold += o.subtotal;
+    soldByRef.set(key, cur);
+  }
+  const affRows: AffRow[] = affiliates
+    .map((a) => {
+      const ob = soldByRef.get(a.code) || { count: 0, sold: 0 };
+      return {
+        code: a.code,
+        handle: a.handle,
+        status: a.status,
+        conversions: a.conversions,
+        pendingUsd: a.commissionPendingUsd,
+        paidUsd: a.commissionPaidUsd,
+        orderCount: ob.count,
+        soldUsd: ob.sold,
+      };
+    })
+    .sort((x, y) => y.pendingUsd - x.pendingUsd);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
@@ -86,6 +116,10 @@ export default async function AdminPage() {
           Revenue mix: {formatMoney(revenue)}
         </p>
       )}
+
+      <section className="mt-10">
+        <AffiliatesCommissions rows={affRows} />
+      </section>
 
       <section className="mt-10">
         <SettingsEditor />

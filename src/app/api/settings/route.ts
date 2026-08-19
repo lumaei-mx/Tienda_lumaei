@@ -15,6 +15,7 @@ function publicSettings(s: StoreSettings) {
     secondaryMarket: s.secondaryMarket,
     freeShippingMxUsd: s.freeShippingMxUsd,
     freeShippingUsd: s.freeShippingUsd,
+    freeShippingMinQty: s.freeShippingMinQty,
     shippingFlatMxUsd: s.shippingFlatMxUsd,
     shippingFlatUsd: s.shippingFlatUsd,
     taxRateMx: s.taxRateMx,

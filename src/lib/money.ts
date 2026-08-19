@@ -53,8 +53,12 @@ export function formatByMarket(
 export function calcShipping(
   s: StoreSettings,
   subtotal: number,
-  market: Market
+  market: Market,
+  qty = 0
 ) {
+  // Envío gratis por cantidad (documentado: "compra 2, envío gratis" sube el
+  // ticket promedio y el margen neto sin tocar el precio unitario).
+  if (s.freeShippingMinQty > 0 && qty >= s.freeShippingMinQty) return 0;
   if (market === "MX") {
     return subtotal >= s.freeShippingMxUsd ? 0 : s.shippingFlatMxUsd;
   }

@@ -46,11 +46,13 @@ export default async function ProductPage({
   searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ ref?: string }>;
+  searchParams: Promise<{ ref?: string; affiliateRef?: string }>;
 }) {
   const { slug } = await params;
-  // Ref de afiliado: `?ref=@handle`. force-dynamic garantiza searchParams reales.
-  const { ref } = await searchParams;
+  // Ref de afiliado: acepta `?ref=@handle` (pitch DM) y `?affiliateRef=@handle`
+  // (link en bio de TikTok). force-dynamic garantiza searchParams reales.
+  const { ref, affiliateRef } = await searchParams;
+  const rawRef = affiliateRef ?? ref;
   const product = await getProductBySlugAsync(slug);
   if (!product) notFound();
 
@@ -65,7 +67,7 @@ export default async function ProductPage({
       {/* Sanitizado: NUNCA enviar costos/SKUs internos al cliente */}
       <ProductPageView
         product={toPublicProduct(product)}
-        affiliateRef={normalizeRef(ref)}
+        affiliateRef={normalizeRef(rawRef)}
       />
     </>
   );
