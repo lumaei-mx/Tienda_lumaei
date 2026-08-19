@@ -11,10 +11,11 @@ import { AddToCartButton } from "@/components/AddToCartButton";
 import { ProductPrice } from "@/components/ProductPrice";
 import { ProductGallery } from "@/components/ProductGallery";
 import { TrustBadges } from "@/components/TrustBadges";
+import { TrustSeal } from "@/components/TrustSeal";
 import { ProductReviews } from "@/components/ProductReviews";
 import { BackButton } from "@/components/BackButton";
 import { SectionTitle } from "@/components/SectionTitle";
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, ShieldCheck, Truck, Tag } from "lucide-react";
 
 export function ProductPageView({
   product,
@@ -85,8 +86,9 @@ export function ProductPageView({
           </h1>
           <p className="mt-3 leading-relaxed text-brown-soft">{copy.subtitle}</p>
 
-          <div className="mt-5">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <ProductPrice product={product} />
+            <TrustSeal />
           </div>
 
           <ul className="mt-6 space-y-2.5">
@@ -97,6 +99,32 @@ export function ProductPageView({
               </li>
             ))}
           </ul>
+
+          {/* Oferta apilada (Hormozi): garantía + envío gratis 2+ + descuento bienvenida */}
+          <div className="mt-6 rounded-2xl border border-gold/30 bg-cream/60 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-dark">
+              {t("productOfferStack", lang)}
+            </p>
+            <ul className="mt-3 space-y-2.5 text-sm text-brown-soft">
+              <li className="flex items-start gap-2.5">
+                <ShieldCheck size={16} strokeWidth={1.8} className="mt-0.5 shrink-0 text-gold-dark" />
+                <span>{t("productOfferG", lang)}</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Truck size={16} strokeWidth={1.8} className="mt-0.5 shrink-0 text-gold-dark" />
+                <span>{t("productOfferS", lang)}</span>
+              </li>
+              <li className="flex items-start gap-2.5">
+                <Tag size={16} strokeWidth={1.8} className="mt-0.5 shrink-0 text-gold-dark" />
+                <span>
+                  {t("productOfferD", lang)}{" "}
+                  <span className="rounded-md bg-brown px-1.5 py-0.5 font-mono text-[11px] font-bold tracking-wider text-ivory">
+                    LUMAI10
+                  </span>
+                </span>
+              </li>
+            </ul>
+          </div>
 
           <div className="mt-7">
             <AddToCartButton

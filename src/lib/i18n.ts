@@ -243,8 +243,24 @@ const dict = {
 
   // PDP
   productTrust: {
-    es: "Pago seguro · Envío con rastreo a México y Estados Unidos",
-    en: "Secure payment · Tracked shipping to Mexico and the US",
+    es: "90 días de garantía · Envío gratis desde 2 piezas · Pago seguro Stripe",
+    en: "90-day guarantee · Free shipping from 2 items · Secure Stripe checkout",
+  },
+  productOfferStack: {
+    es: "Qué incluye tu compra",
+    en: "What your purchase includes",
+  },
+  productOfferG: {
+    es: "90 días de garantía: si llega dañado o no funciona, te lo reponemos.",
+    en: "90-day guarantee: if it arrives damaged or doesn't work, we replace it.",
+  },
+  productOfferS: {
+    es: "Envío gratis desde 2 piezas (MX y US) · con número de rastreo.",
+    en: "Free shipping from 2 items (MX & US) · with tracking number.",
+  },
+  productOfferD: {
+    es: "10% de bienvenida con el código LUMAI10 en tu 1ª compra.",
+    en: "10% welcome discount with code LUMAI10 on your first order.",
   },
   productDescription: { es: "Descripción", en: "Description" },
   productSpecs: { es: "Especificaciones", en: "Specifications" },
@@ -260,10 +276,10 @@ const dict = {
     es: "México 14-16 días · USA 4-7 días",
     en: "Mexico 14-16 days · USA 4-7 days",
   },
-  trustReturnT: { es: "Reposición garantizada", en: "Guaranteed replacement" },
+  trustReturnT: { es: "90 días de garantía", en: "90-day guarantee" },
   trustReturnD: {
-    es: "Si llega dañado, te lo reponemos",
-    en: "If it arrives damaged, we replace it",
+    es: "Si llega dañado o no funciona, te lo reponemos",
+    en: "If damaged or defective, we replace it",
   },
   trustSupportT: { es: "Soporte directo", en: "Direct support" },
   trustSupportD: {
