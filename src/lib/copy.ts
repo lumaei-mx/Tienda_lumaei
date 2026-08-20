@@ -1145,6 +1145,434 @@ const COPY_BY_ID: Record<string, ProductCopy> = {
     reviewCount: 13,
     reviewAvg: 4.6,
   },
+
+  /* ─── 11 productos del catálogo activo: copy curado ES ─── */
+
+  // PRIORIDAD 1: Descripción vacía — PDP rota
+  "cj-1815302080471912448": {
+    name: "Cepillo de Vapor 3 en 1 para Gatos y Perros",
+    hook: "Cepillo con vapor que desenreda, limpia y masajea en una sola pasada",
+    subtitle:
+      "Cepillo 3 en 1 con vapor suave para mascotas: desenreda nudos, retira pelo suelto y masajea la piel. Ideal para épocas de muda.",
+    benefits: [
+      "Vapor suave que desenreda nudos sin jalar ni lastimar",
+      "Retira el pelo suelto y reduce la muda en casa",
+      "Masajea la piel y deja el pelaje suave y brillante",
+      "Función de autolimpieza: retira el pelo de las cerdas sin esfuerzo",
+      "Recargable y compacto — ideal para gatos y perros de pelo medio y largo",
+    ],
+    description:
+      "El cepillado de tu mascota ya no tiene por qué ser una batalla. Este cepillo 3 en 1 combina vapor suave, cerdas desenredantes y masaje en una sola pasada: el vapor ayuda a soltar nudos, las cerdas atrapan el pelo suelto y la silicona masajea la piel sin irritar.\n\nEs especialmente útil en épocas de muda, cuando el pelo suelto invade toda la casa. La función de autolimpieza retira el pelo acumulado de las cerdas con solo presionar un botón.\n\nRecargable por USB, compacto y fácil de guardar. Apto para gatos y perros de pelo medio y largo.",
+    specs: [
+      "Tipo: cepillo de vapor 3 en 1 para mascotas",
+      "Funciones: vapor + peinado + autolimpieza",
+      "Alimentación: recargable por USB",
+      "Peso del paquete: ~285 g",
+      "Uso: gatos y perros de pelo medio y largo",
+    ],
+    faqs: [
+      {
+        q: "¿El vapor quema a mi mascota?",
+        a: "No. El vapor es suave y a baja temperatura, diseñado para uso seguro en mascotas. Prueba en una zona pequeña la primera vez.",
+      },
+      {
+        q: "¿Sirve para pelo corto?",
+        a: "Funciona mejor en pelo medio y largo. Para pelo corto, un guante de baño de silicón es más práctico.",
+      },
+      {
+        q: "¿Cómo se limpia el cepillo?",
+        a: "Usa la función de autolimpieza o retira las cerdas y enjuágalas con agua tibia.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  // PRIORIDAD 2: Featured en homepage, copy CJ con leak de referencia interna
+  "cj-842B5DB4-E59C-42FC-BEAB-01893C169776": {
+    name: "Lámpara LED Recargable con Sensor de Movimiento",
+    hook: "Se enciende sola al detectar movimiento — sin cables, sin interruptores",
+    subtitle:
+      "Luz nocturna magnética con sensor PIR: se instala sin tornillos en pasillo, clóset o escalera y se enciende sola. Recargable por USB.",
+    benefits: [
+      "Sensor de movimiento: se enciende automáticamente al detectar presencia",
+      "Magnética y sin tornillos: pégala en cualquier superficie metálica",
+      "Recargable por USB — hasta 6 horas de luz continua",
+      "Luz cálida que no encandila, ideal para dormitorios y pasillos",
+      "Diseño compacto: clóset, escalera, sottoscala, baño",
+    ],
+    description:
+      "¿Te levantas de noche y el pasillo está a oscuras? Esta lámpara LED con sensor de movimiento se enciende sola al detectar tu presencia — sin tocar interruptores, sin buscar la luz.\n\nSu base magnética se adhiere a cualquier superficie metálica sin tornillos ni pegamento. Recargable por USB, cada carga dura hasta 6 horas de uso continuo. La luz cálida no encandila y es perfecta para dormitorios, pasillos, clósets y escaleras.\n\nDiseño compacto y discreto que se integra con cualquier espacio.",
+    specs: [
+      "Tipo: lámpara LED con sensor PIR",
+      "Alimentación: recargable por USB",
+      "Luz: cálida, bajo consumo",
+      "Montaje: magnético, sin tornillos",
+      "Peso del paquete: ~120 g",
+    ],
+    faqs: [
+      {
+        q: "¿Cuánto dura la batería?",
+        a: "Hasta 6 horas de luz continua con carga completa. En modo sensor (se enciende solo al detectar movimiento) dura mucho más.",
+      },
+      {
+        q: "¿Se pega sola a la pared?",
+        a: "Se adhiere a superficies metálicas. Para paredes de concreto o madera, usa el imán incluido o un gancho adhesivo.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  // PRIORIDAD 3: Featured, nombre truncado "Decr", estacionalidad ajena
+  "cj-1597459825850593280": {
+    name: "Proyector de Estrellas Astronauta — Lámpara Nocturna para Niños",
+    hook: "Convierte el techo en un cielo estrellado con rotación y modo música",
+    subtitle:
+      "Lámpara proyectora de galaxia en forma de astronauta: proyecta estrellas y nebulosas en el techo, con rotación y modo música. El regalo perfecto para niños.",
+    benefits: [
+      "Proyecta estrellas y nebulosas en todo el techo",
+      "Modo rotación y modo música para crear ambiente",
+      "Luz cálida con apagado automático para dormir tranquilo",
+      "Recargable y portátil — perfecto para cuartos infantiles",
+      "El regalo ideal para cumpleaños, bautizos y navidades",
+    ],
+    description:
+      "Convierte el techo de su cuarto en un cielo estrellado. Este proyector en forma de astronauta proyecta estrellas y nebulosas con rotación suave y modo música, creando un ambiente mágico para dormir.\n\nTiene apagado automático para que se apague solo cuando se duerma, y luz cálida que no interrumpe el descanso. Recargable por USB,无需 cables permanently connected.\n\nEl regalo perfecto para niños y el detalle ideal para cuartos temáticos.",
+    specs: [
+      "Tipo: lámpara proyectora de estrellas",
+      "Forma: astronauta",
+      "Funciones: proyección, rotación, música, apagado automático",
+      "Alimentación: recargable por USB",
+      "Peso del paquete: ~350 g",
+    ],
+    faqs: [
+      {
+        q: "¿Se puede usar de noche toda la noche?",
+        a: "Sí, tiene apagado automático programable para que no encienda toda la noche.",
+      },
+      {
+        q: "¿Apto para recién nacidos?",
+        a: "Sí, la luz es cálida y suave. Recomendamos usarla en modo sin música para bebés.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  // Resto del catálogo activo
+  "cj-1540578299821436928": {
+    name: "Organizador Giratorio de Especias de 2 Niveles",
+    hook: "Todas tus especias a la mano con un solo giro",
+    subtitle:
+      "Organizador giratorio 360° para especias y frascos: dos niveles, estilo minimalista, aprovecha la despensa y la encimera sin desorden.",
+    benefits: [
+      "Giro 360° para acceder a todas las especias sin buscar",
+      "Dos niveles de almacenamiento para maximizar espacio",
+      "Diseño minimalista que se ve bien en la encimera",
+      "Base estable para uso diario",
+      "Fácil de limpiar y reubicar",
+    ],
+    description:
+      "Di adiós a las especias escondidas detrás de otras especias. Este organizador giratorio de 2 niveles gira 360° para que tengas todas tus especias y frascos a la mano con un solo movimiento.\n\nSu estilo minimalista combina con cualquier cocina, y la base estable permite uso diario sin volcarse. Aprovecha el espacio de la encimera o la despensa de forma inteligente.",
+    specs: [
+      "Tipo: organizador giratorio de 2 niveles",
+      "Material: plástico resistente",
+      "Función: giro 360°",
+      "Peso del paquete: ~380 g",
+      "Uso: cocina, despensa, encimera",
+    ],
+    faqs: [
+      {
+        q: "¿Cuántos frascos caben?",
+        a: "Depende del tamaño de los frascos, pero en promedio 12-16 frascos de especias estándar.",
+      },
+      {
+        q: "¿Es estable?",
+        a: "Sí, la base es amplia y estable. No se volca con uso normal.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-F2F67936-9316-4B85-BB67-9C3FA2B01B03": {
+    name: "Picadora Manual de Alimentos 485 ml — 5 Funciones en 1",
+    hook: "Pica, rebana, muele y ralla en segundos, sin electricidad",
+    subtitle:
+      "Picadora manual multifunción: pica, rebana, muele, ralla y tritura verduras, carne y especias. Sin cables, sin complicaciones, fácil de limpiar.",
+    benefits: [
+      "5 funciones en 1: pica, rebana, muele, ralla y tritura",
+      "Sin electricidad ni cables — funciona en cualquier lugar",
+      "Se limpia en segundos: solo enjuaga con agua y jabón",
+      "Capacidad de 485 ml para porciones familiares",
+      "Ideal para cocinas pequeñas, viajes y campamento",
+    ],
+    description:
+      "Esta picadora manual de 485 ml hace el trabajo de 5 herramientas en una sola: pica, rebana, muele, ralla y tritura verduras, carne y especias en segundos, sin electricidad.\n\nSe limpia en segundos — solo enjuaga con agua y jabón sin mojarte las manos. Su tamaño compacto la hace ideal para cocinas pequeñas, viajes, campamento o la oficina.",
+    specs: [
+      "Tipo: picadora manual multifunción",
+      "Capacidad: 485 ml",
+      "Funciones: picar, rallar, moler, triturar, rebanar",
+      "Material: plástico apto para alimentos + acero inoxidable",
+      "Peso del paquete: ~350 g",
+    ],
+    faqs: [
+      {
+        q: "¿Sirve para carne?",
+        a: "Sí, para carne cocida o muy blanda. Para carne cruda dura, una picadora eléctrica es más práctica.",
+      },
+      {
+        q: "¿Se puede lavar en lavavajillas?",
+        a: "Recomendamos lavado a mano para mayor durabilidad.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-1642088435160715264": {
+    name: "Luz LED Recargable con Sensor para Clóset y Cocina",
+    hook: "Barra de luz magnética que se enciende sola al abrir la puerta",
+    subtitle:
+      "Barra de luz LED recargable con sensor: se instala sin cables y se enciende automáticamente al detectar movimiento. Perfecta para clósets, alacenas y bajo gabinetes.",
+    benefits: [
+      "Sensor de movimiento: se enciende sola al abrir la puerta",
+      "Sin cables ni instalación eléctrica",
+      "Recargable por USB — hasta 50,000 horas de vida útil",
+      "Luz en 3 tonos: cálida, neutra y fría",
+      "Montaje magnético: se adhiere a cualquier superficie metálica",
+    ],
+    description:
+      "Esta barra de luz LED se instala en segundos y se enciende sola cada vez que abres el clóset, la alacena o el gabinete. Su sensor de movimiento detecta tu presencia y activa la luz sin tocar interruptores.\n\nRecargable por USB, con 3 tonos de luz para elegir el ambiente que prefieras. Su diseño magnético se adhiere a cualquier superficie metálica sin herramientas.",
+    specs: [
+      "Tipo: barra de luz LED con sensor",
+      "Alimentación: recargable por USB",
+      "Tonos de luz: 3 (cálida, neutra, fría)",
+      "Montaje: magnético, sin tornillos",
+      "Vida útil: hasta 50,000 horas",
+    ],
+    faqs: [
+      {
+        q: "¿Cuánto dura la batería?",
+        a: "Varía según el tono y uso. En modo sensor dura semanas; en luz continua, varias horas.",
+      },
+      {
+        q: "¿Se pega a madera?",
+        a: "El imán se adhiere a superficies metálicas. Para madera o plástico, usa el adhesivo incluido.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-1465145114119770112": {
+    name: "Impresora Térmica Portátil Bluetooth — Etiquetas sin Tinta",
+    hook: "Imprime etiquetas y apuntes desde tu celular, sin cartuchos",
+    subtitle:
+      "Impresora térmica portátil Bluetooth: imprime etiquetas de precios, apuntes y fotos directo desde tu celular. Sin tinta, sin cartuchos, del tamaño de una palma.",
+    benefits: [
+      "Sin tinta ni cartuchos: la tecnología térmica no necesita consumibles",
+      "Bluetooth: se conecta a tu celular y imprime en segundos",
+      "App en 10 idiomas con plantillas listas para usar",
+      "Del tamaño de una palma — cabe en tu bolsillo",
+      "Ideal para negocio, oficina y escuela",
+    ],
+    description:
+      "Imprime etiquetas de precios, apuntes, fotos y códigos directo desde tu celular por Bluetooth, sin cartuchos ni tinta. La tecnología térmica imprime en papel especial a bajo costo.\n\nSu app incluye plantillas para etiquetas de precio, códigos de barras, listas de tareas y más. Del tamaño de una palma, cabe en tu bolsillo y funciona con recarga por USB.",
+    specs: [
+      "Tipo: impresora térmica portátil",
+      "Conectividad: Bluetooth",
+      "Tinta: no requiere (térmica)",
+      "App: 10 idiomas",
+      "Peso del paquete: ~160 g",
+    ],
+    faqs: [
+      {
+        q: "¿Necesita tinta o cartuchos?",
+        a: "No. Usa tecnología térmica sobre papel especial. Solo necesitas el rollo de papel térmico.",
+      },
+      {
+        q: "¿Funciona con iPhone y Android?",
+        a: "Sí, la app está disponible para ambos sistemas operativos.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-1676766755672305664": {
+    name: "Soporte Magnético para Auto con Carga Inalámbrica 15 W",
+    hook: "Coloca tu celular con una sola mano y cárgalo sin cables mientras manejas",
+    subtitle:
+      "Soporte magnético para auto con carga inalámbrica de 15W: coloca el celular con una sola mano, base magnética fuerte y brazo flexible que se adapta a cualquier tablero.",
+    benefits: [
+      "Carga inalámbrica de 15W: carga tu celular mientras lo usas",
+      "Base magnética fuerte (25 N): el celular no se cae en baches",
+      "Brazo flexible 360°: se adapta a cualquier ángulo de visualización",
+      "Colocación con una sola mano: solo acerca el celular",
+      "Compatible con iPhone y Android con anillo magnético",
+    ],
+    description:
+      "Coloca tu celular con una sola mano y cárgalo sin cables mientras manejas. Este soporte magnético tiene base de 25 N de fuerza que sostiene el celular firmemente incluso en caminos irregulares, y carga inalámbrica de 15W para que llegues a tu destino con batería.\n\nSu brazo flexible se adapta al tablero de cualquier auto, y la colocación es instantánea: solo acerca el celular y el imán lo sostiene. Compatible con iPhone 12+ y Android con anillo magnético.",
+    specs: [
+      "Tipo: soporte magnético para auto con carga",
+      "Carga: inalámbrica 15W",
+      "Fuerza magnética: 25 N",
+      "Montaje: brazo flexible 360°",
+      "Compatible: iPhone 12+ y Android con anillo magnético",
+    ],
+    faqs: [
+      {
+        q: "¿Funciona con mi celular?",
+        a: "Funciona con iPhone 12 o posterior y con Android que tengan anillo magnético integrado o una funda magnética.",
+      },
+      {
+        q: "¿El celular se cae en los baches?",
+        a: "La base magnética tiene 25 N de fuerza, suficiente para sostener el celular en caminos irregulares.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-7B4E2827-F9FB-4F63-A7C9-4BE73759C167": {
+    name: "Parches Oculares de Colágeno — Hidratación para el Contorno de Ojos",
+    hook: "Parches que ayudan a refrescar la mirada y dar apariencia de firmeza",
+    subtitle:
+      "Parches tipo cristal con colágeno, vitamina C y ácido hialurónico: ayudan a refrescar la mirada y dar apariencia de firmeza al contorno de ojos. Se disuelven con el calor de la piel.",
+    benefits: [
+      "Colágeno, vitamina C, E y ácido hialurónico para hidratación",
+      "Se disuelven con el calor de la piel — no dejan residuos pegajosos",
+      "Ayudan a refrescar la mirada y dar apariencia de firmeza",
+      "Ideales para rutina nocturna, 2-3 veces por semana",
+      "Pack de 60 parches (30 pares) — un mes de uso",
+    ],
+    description:
+      "Estos parches oculares de colágeno se aplican en el contorno de ojos y ayudan a refrescar la mirada, dar apariencia de firmeza y reducir la apariencia de ojeras y líneas de expresión.\n\nContienen colágeno, vitamina C, E y ácido hialurónico. Se disuelven con el calor de la piel en 20-30 minutos, dejando la zona hidratada y sin residuos pegajosos.\n\nÚsalos 2-3 veces por semana durante 30 minutos como parte de tu rutina facial. Un paquete incluye 60 parches (30 pares).",
+    specs: [
+      "Tipo: parches oculares de colágeno",
+      "Ingredientes: colágeno, vitamina C, E, ácido hialurónico",
+      "Contenido: 60 parches (30 pares)",
+      "Tiempo de uso: 20-30 minutos",
+      "Peso del paquete: ~160 g",
+    ],
+    faqs: [
+      {
+        q: "¿Elimina las ojeras?",
+        a: "Los parches ayudan a hidratar y dar apariencia de firmeza. Los resultados varían según la persona.",
+      },
+      {
+        q: "¿Se pueden reutilizar?",
+        a: "No, son de uso único. Cada par se usa una vez y se desecha.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-1628204613260292096": {
+    name: "Dispensador Automático de Jabón con Sensor — Espuma en 0.25 Segundos",
+    hook: "Jabón en espuma sin tocar nada: el sensor detecta tu mano y dispensa al instante",
+    subtitle:
+      "Dispensador automático de jabón con sensor infrarrojo: convierte el líquido en espuma en 0.25 segundos. Depósito de 280 ml, batería recargable, seguro en baños húmedos.",
+    benefits: [
+      "Sensor infrarrojo: detecta tu mano y dispensa en 0.25 segundos",
+      "Ratio espuma/líquido 12:1 — un depósito de 280 ml dura ~500 dosis",
+      "Batería recargable de 1200 mAh por USB",
+      "Apto para ambientes húmedos (baño y cocina)",
+      "Adiós a botellas resbalosas y jaboneras sucias",
+    ],
+    description:
+      "Jabón en espuma rica sin tocar nada. El sensor infrarrojo detecta tu mano y dispensa jabón en espuma al instante — sin tocar la botella, sin desorden, sin gérmenes.\n\nEl depósito de 280 ml rinde unas 500 dosis (aproximadamente 50 días para toda la familia). La batería recargable por USB dura semanas, y el diseño es apto para baños húmedos.\n\nInstalación en segundos: colócalo junto al lavabo y listo.",
+    specs: [
+      "Tipo: dispensador automático de jabón con sensor",
+      "Capacidad: 280 ml (~500 dosis)",
+      "Batería: recargable 1200 mAh por USB",
+      "Tiempo de dispensado: 0.25 segundos",
+      "Peso del paquete: ~310 g",
+    ],
+    faqs: [
+      {
+        q: "¿Qué tipo de jabón puedo usar?",
+        a: "Jabón líquido diluido con agua. El manual incluye la proporción ideal para espuma.",
+      },
+      {
+        q: "¿Cuánto dura la batería?",
+        a: "Semanas con uso normal. Se carga por USB en 1-2 horas.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
+
+  "cj-1764139609648271360": {
+    name: "Rodillo de Hielo Facial de Silicona — Masaje Frío para el Rostro",
+    hook: "Masaje facial frío que ayuda a desinflamar la apariencia y preparar la piel",
+    subtitle:
+      "Molde de hielo facial de silicona flexible: congela, masajea y ayuda a desinflamar la apariencia del rostro. Apto de -40 °C a 250 °C, lavable.",
+    benefits: [
+      "Masaje frío que ayuda a desinflamar la apariencia del rostro",
+      "Silicona flexible de -40 °C a 250 °C: apto congelador y lavavajillas",
+      "Prepara la piel para el maquillaje — base más uniforme",
+      "Compacto para llevar en tu bolsa de viaje",
+      "Fácil de limpiar y reutilizar",
+    ],
+    description:
+      "Llena el molde con agua, congela y masajea tu rostro para refrescar, ayudar a desinflamar la apariencia y preparar la piel para el maquillaje. La silicona flexible se adapta a las curvas del rostro.\n\nResistente de -40 °C a 250 °C: apto para congelador y lavavajillas. Compacto y ligero para llevar en tu bolsa de viaje o gimnasio.",
+    specs: [
+      "Tipo: molde de hielo facial con manija",
+      "Material: silicona flexible (-40 °C a 250 °C)",
+      "Uso: masaje facial con hielo",
+      "Lavable: a mano y en lavavajillas",
+      "Peso del paquete: ~180 g",
+    ],
+    faqs: [
+      {
+        q: "¿Cuánto tiempo congela?",
+        a: "Depende de tu congelador, pero en general 2-4 horas para hielo sólido.",
+      },
+      {
+        q: "¿Es seguro para pieles sensibles?",
+        a: "Sí, la silicona es suave. Usa el hielo envuelto en un pañuelo si tu piel es muy sensible.",
+      },
+      {
+        q: "¿Cuánto tarda el envío a México?",
+        a: "México: 14 a 16 días hábiles. Estados Unidos: 4 a 7 días, con rastreo.",
+      },
+    ],
+    reviews: [],
+  },
 };
 
 export function getProductCopy(product: PublicProduct): ProductCopy | null {
