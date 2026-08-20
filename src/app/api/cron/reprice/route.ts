@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { authorizeCron } from "@/lib/cron-auth";
+import { isAdminRequest } from "@/lib/admin-auth";
 import { runReprice } from "@/lib/automation/reprice";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-  const unauthorized = authorizeCron(req);
-  if (unauthorized) return unauthorized;
+  // Aceptar cron secret O admin autenticado.
+  const cronUnauthorized = authorizeCron(req);
+  const admin = await isAdminRequest(req);
+  if (cronUnauthorized && !admin) {
+    return cronUnauthorized;
+  }
   try {
     const result = await runReprice();
     return NextResponse.json({ ok: true, result });
